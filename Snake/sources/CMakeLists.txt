@@ -68,7 +68,6 @@ set(Include_Dir
 	)	
 	
 set(Main
-	Main/main.h
 	Main/main.cpp
 	${Include_Dir}
 	)

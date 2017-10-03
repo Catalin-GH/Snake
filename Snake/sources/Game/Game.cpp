@@ -60,7 +60,7 @@ void Game::GameStart(void)
             system("pause");*/
             break;
         }
-        Sleep(100);
+        Sleep(50);
     }
 }
 
