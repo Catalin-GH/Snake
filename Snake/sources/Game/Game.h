@@ -25,10 +25,11 @@ private:
     Controls con;
 public:
     Game(void);
-    void TheMain(const COORD &);
+    void Start(void);
+    void Main(const COORD &);
     void Options(void);
-    void GameStart(void);
-    void GameSetup(void);
+    void SnakeGame(void);
+    void Exit(void);
 
     COORD operator=(COORD);
 };

@@ -12,6 +12,8 @@
 #define IS_SNAKE 2
 #define IS_FOOD 3
 #define COLOR_FOOD 11
+#define COLOR_MAIN 14
+#define COLOR_MAIN_SELECT 12
 
 bool operator==(const COORD &, const COORD &);
 bool operator!=(const COORD &, const COORD &);
