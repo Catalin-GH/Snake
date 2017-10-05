@@ -2,54 +2,43 @@
 
 Game::Game(void)
 {
+    OptionsName[0] = "START";
+    OptionsName[1] = "OPTIONS";
+    OptionsName[2] = "EXIT";
     Show_Cursor(FALSE);
+    SetConsoleSize(800, 600);
     COORD OriginPosition = { 5, 5 };
     int length = 20;
     map = new Map(length, OriginPosition);
     food = new Food();
 }
 
+void Game::MainBlock(COORD Position, size_t Color, size_t iter)
+{
+    gotoxy(Position.X, Position.Y + iter * 2);
+    SetTextColor((WORD)Color);
+    std::cout << OptionsName[iter];
+}
+
+void Game::MainBlockInit(COORD Position)
+{
+    MainBlock(Position, COLOR_MAIN_SELECT, 0);
+    MainBlock(Position, COLOR_MAIN, 1);
+    MainBlock(Position, COLOR_MAIN, 2);
+}
+
 void Game::Start(void)
 {
-    COORD MainPosition = { 10, 10 };
-    /*size_t OptionSelected = */Main(MainPosition);
-    /*switch (OptionSelected)
-    {
-    case 0:
-        {
-        SnakeGame();
-        }break;
-    case 1:
-        {
-        Options();
-        }break;
-    case 2:
-        {
-        Exit();
-        }
-    }*/
+    COORD MainPosition = { 33, 12 };
+    Main(MainPosition);
 }
 
 void Game::Main(const COORD & Position)
 {
     size_t select = 0;
-    std::string OptionsName[3];
-    OptionsName[0] = "START";
-    OptionsName[1] = "OPTIONS";
-    OptionsName[2] = "EXIT";
-
-    gotoxy(Position.X, Position.Y);
-    SetTextColor(COLOR_MAIN_SELECT);
-    std::cout << " " << OptionsName[0];
-    for (size_t i = 1; i < 3; i++)
-    {
-        gotoxy(Position.X, Position.Y + i * 2);
-        SetTextColor(COLOR_MAIN);
-        std::cout << " " << OptionsName[i];
-    }
-
-    bool bval = FALSE;
-    while (!bval)
+    MainBlockInit(Position);
+    bool bVal = FALSE;
+    while (!bVal)
     {
         size_t previousSelected;
         if (GetAsyncKeyState(VK_DOWN))
@@ -57,13 +46,9 @@ void Game::Main(const COORD & Position)
             previousSelected = select;
             if (select < 2)
             {
-                gotoxy(Position.X, Position.Y + previousSelected * 2);
-                SetTextColor(COLOR_MAIN);
-                std::cout << " " << OptionsName[previousSelected];
+                MainBlock(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                gotoxy(Position.X, Position.Y + select * 2);
-                SetTextColor(COLOR_MAIN_SELECT);
-                std::cout << " " << OptionsName[select];
+                MainBlock(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -72,13 +57,9 @@ void Game::Main(const COORD & Position)
             previousSelected = select;
             if (select > 0)
             {
-                gotoxy(Position.X, Position.Y + previousSelected * 2);
-                SetTextColor(COLOR_MAIN);
-                std::cout << " " << OptionsName[previousSelected];
+                MainBlock(Position, COLOR_MAIN, previousSelected);
                 --select;
-                gotoxy(Position.X, Position.Y + select * 2);
-                SetTextColor(COLOR_MAIN_SELECT);
-                std::cout << " " << OptionsName[select];
+                MainBlock(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -86,30 +67,68 @@ void Game::Main(const COORD & Position)
         {
             switch (select)
             {
-            case 0: 
+            case START_GAME: 
             {
+                cls();
                 SnakeGame();
-                bval = TRUE;
+                /*
+                anything else to write
+                */
+                cls();
+                select = 0;
+                MainBlockInit(Position);
             }break;
-            case 1:
+            case SETTINGS:
             {
-                Options();
-                bval = TRUE;
+                cls();
+                Options(Position);
+                cls();
+                select = 0;
+                MainBlockInit(Position);
             }break;
-            case 2: 
+            case EXIT: 
             {
+                cls();
                 Exit();
-                bval = TRUE;
+                select = 0;
+                bVal = TRUE;
             }break;
             }
         }
-        Sleep(300);
+        Sleep(200);
     }
 }
 
-void Game::Options(void)
+void Game::Options(COORD Position)
 {
+    Block demoBlock[5];
+    demoBlock[0].SetColor(COLOR_MAP);
+    demoBlock[1].SetColor(COLOR_WALL);
+    demoBlock[2].SetColor(COLOR_FOOD);
+    demoBlock[3].SetColor(COLOR_SNAKE);
+    demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
+    for(size_t i = 0; i < 5; i++)
+    {
+        COORD left = {Position.X + i * 2, Position.Y};
+        COORD right = {Position.X + i * 2, Position.Y + 1};
+        demoBlock[i].SetCoord(left, right);
+        demoBlock[i].SetFormat(FORMAT);
+    }
 
+    for(size_t i = 0; i < 5; i++)
+    {
+        size_t lx = demoBlock[i].GetLeft().X;
+        size_t ly = demoBlock[i].GetLeft().Y;
+        size_t rx = demoBlock[i].GetRight().X;
+        size_t ry = demoBlock[i].GetRight().Y;
+        gotoxy(ly, lx);             //(col, row)
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
+        std::cout << (uint8_t)demoBlock[i].GetFormat();
+        gotoxy(ry, rx);             //(col, row)
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
+        std::cout << (uint8_t)demoBlock[i].GetFormat();
+    }
+    system("pause");
 }
 
 void Game::SnakeGame(void)
@@ -127,7 +146,7 @@ void Game::SnakeGame(void)
     {
         map->DeleteObject(snake->GetSnake());
         map->GraphicObject(snake->GetSnake());
-        snake->UpdatePosition(con.Key_Press(snake->GetSnake()[0].GetPosition()));
+        snake->UpdatePosition(snake->ArrowKeyPress());
         if (map->UpdateObject(snake->GetSnake()) && !snake->HitBodyElement())
         {
             map->GraphicObject(snake->GetSnake());
@@ -148,7 +167,7 @@ void Game::SnakeGame(void)
             system("pause");*/
             break;
         }
-        Sleep(100);
+        Sleep(SPEED);
     }
 }
 

@@ -4,10 +4,17 @@ Snake::Snake(const Block & StartPosition)
 {
     for (size_t i = 0; i < SNAKE_LENGTH; i++)
     {
+        Block block;
         COORD left = { StartPosition.GetLeft().X, StartPosition.GetLeft().Y - (SHORT)i * 2 };
         COORD right = { StartPosition.GetRight().X, StartPosition.GetRight().Y - (SHORT)i * 2 };
         COORD position = { StartPosition.GetPosition().X, StartPosition.GetPosition().Y - (SHORT)i };
-        _snake.push_back(GetBlockTemplate(left, right, position));
+        block.SetValue(FORMAT);
+        block.SetFormat(IS_SNAKE);
+        block.SetLeft(left);
+        block.SetRight(right);
+        block.SetPosition(position);
+        block.SetColor((i == 0) ? COLOR_SNAKE_HEAD : COLOR_SNAKE);
+        _snake.push_back(block);
     }
 }
 
@@ -79,6 +86,48 @@ void Snake::UpdatePosition(COORD HeadPosition)
         }
         _snake[0].SetPosition(HeadPosition);
     }
+}
+
+COORD Snake::ArrowKeyPress()
+{
+    COORD newPosition = _snake[0].GetPosition();
+
+    if(GetAsyncKeyState(VK_LEFT))
+    {
+        newPosition.Y -= 1;
+        return newPosition;
+    }
+    if(GetAsyncKeyState(VK_UP))
+    {
+        newPosition.X -= 1;
+        return newPosition;
+    }
+    if(GetAsyncKeyState(VK_RIGHT))
+    {
+        newPosition.Y += 1;
+        return newPosition;
+    }
+    if(GetAsyncKeyState(VK_DOWN))
+    {
+        newPosition.X += 1;
+    }
+
+    //DWORD count;  /* ignored */
+    //INPUT_RECORD event;
+    ///* Get the input event */
+    //ReadConsoleInput(GetStdHandle(STD_INPUT_HANDLE), &event, 1, &count);
+
+    ///* Only respond to key release events */
+    //if ((event.EventType == KEY_EVENT) && !event.Event.KeyEvent.bKeyDown)
+    //    switch (event.Event.KeyEvent.wVirtualKeyCode)
+    //    {
+    //    case VK_LEFT:   _newPosition.Y -= 1; break;
+    //    case VK_RIGHT:  _newPosition.Y += 1; break;
+    //    case VK_UP:     _newPosition.X -= 1; break;
+    //    case VK_DOWN:   _newPosition.X += 1; break;
+    //    }
+
+    return newPosition;
 }
 
 void Snake::SeeInfos()

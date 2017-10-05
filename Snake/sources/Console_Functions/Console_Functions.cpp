@@ -56,7 +56,7 @@ void SetConsolePosition(int width, int height)
 
 void SetTextColor(WORD Color)
 {
-    if (! SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color))
+    if (!SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color))
     {
         MessageBox(NULL, TEXT("SetConsoleTextAttribute"), 
             TEXT("Console Error"), MB_OK);

@@ -1,6 +1,5 @@
 include_directories(
 	Console_Functions
-	Controls
 	Game
 	Snake
 	Infos
@@ -13,11 +12,6 @@ include_directories(
 set(ConsoleFunc
 	Console_Functions/Console_Functions.h
 	Console_Functions/Console_Functions.cpp
-	)
-	
-set (Controls
-	Controls/Controls.h
-	Controls/Controls.cpp
 	)
 
 set (Game
@@ -57,7 +51,6 @@ set(Block
 	
 set(Include_Dir
 	${ConsoleFunc}
-	${Controls}
 	${Game}
 	${Snake}
 	${Map}
@@ -75,7 +68,6 @@ set(Main
 source_group ("Main" FILES ${Main})
 source_group ("Block" FILES ${Block})
 source_group ("Console Functions" FILES ${ConsoleFunc})
-source_group ("Controls" FILES ${Controls})
 source_group ("Game" FILES ${Game})
 source_group ("Snake" FILES ${Snake})
 source_group ("Infos" FILES ${Infos})

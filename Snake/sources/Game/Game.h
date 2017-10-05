@@ -5,11 +5,9 @@
 #include "Food.h"
 #include "Map.h"
 #include "Snake.h"
-#include "Controls.h"
 #include "Informations.h"
+#include "Functions.h"
 
-#define MAP_SIDE_LENGTH 25
-#define MAP_ORIGIN_POSITION 10
 #define SPEED 100
 #define START_GAME 0
 #define SETTINGS 1
@@ -18,16 +16,19 @@
 class Game
 {
 private:
+    std::string OptionsName[3];
     Map * map;
     Snake * snake;
     Food * food;
     Infos GameInfos;
-    Controls con;
 public:
     Game(void);
+    void MainBlock(COORD, size_t, size_t);
+    void MainBlockInit(COORD);
+    size_t Navigate(const COORD &);
     void Start(void);
     void Main(const COORD &);
-    void Options(void);
+    void Options(COORD);
     void SnakeGame(void);
     void Exit(void);
 

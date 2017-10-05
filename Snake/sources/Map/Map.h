@@ -8,6 +8,12 @@
 #include <cstdlib>
 #include <time.h>
 
+extern int COLOR_MAP;
+extern int COLOR_SNAKE;
+extern int COLOR_SNAKE_HEAD;
+extern int COLOR_WALL;
+extern int COLOR_FOOD;
+
 class Map
 {
 private:

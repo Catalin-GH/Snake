@@ -8,6 +8,9 @@
 #include <vector>
 #include <fstream>
 
+extern int COLOR_SNAKE;
+extern int COLOR_SNAKE_HEAD;
+
 class Snake
 {
 private:
@@ -32,6 +35,7 @@ public:
     bool HitBodyElement(void);
     void InsertBodyElement(const Block &);
     void UpdatePosition(COORD);
+    COORD ArrowKeyPress();
 
     void SeeInfos(void);
 

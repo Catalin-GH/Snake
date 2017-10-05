@@ -6,8 +6,10 @@
 #include "Block.h"
 #include <vector>
 
+extern int COLOR_FOOD;
+
 class Food
-{   
+{
 private:
     std::vector<Block> _food;
 public:
