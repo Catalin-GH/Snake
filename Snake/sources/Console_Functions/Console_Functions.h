@@ -13,3 +13,5 @@ void cls();
 void SetConsoleSize(int, int);
 void SetConsolePosition(int, int);
 void SetTextColor(WORD);
+void SetConsoleFontSize();
+COORD GetConsoleSize();

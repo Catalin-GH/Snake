@@ -5,8 +5,6 @@ Game::Game(void)
     OptionsName[0] = "START";
     OptionsName[1] = "OPTIONS";
     OptionsName[2] = "EXIT";
-    Show_Cursor(FALSE);
-    SetConsoleSize(800, 600);
     COORD OriginPosition = { 5, 5 };
     int length = 20;
     map = new Map(length, OriginPosition);
@@ -17,6 +15,7 @@ void Game::MainBlock(COORD Position, size_t Color, size_t iter)
 {
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
+    SetConsoleFontSize();
     std::cout << OptionsName[iter];
 }
 
@@ -29,17 +28,19 @@ void Game::MainBlockInit(COORD Position)
 
 void Game::Start(void)
 {
-    COORD MainPosition = { 33, 12 };
-    Main(MainPosition);
+    SetConsoleSize(800, 600);
+    COORD Position = { GetConsoleSize().X / 3, 10 };
+    Main(Position);
 }
 
-void Game::Main(const COORD & Position)
+void Game::Main(COORD Position)
 {
     size_t select = 0;
     MainBlockInit(Position);
     bool bVal = FALSE;
     while (!bVal)
     {
+        Show_Cursor(FALSE);
         size_t previousSelected;
         if (GetAsyncKeyState(VK_DOWN))
         {
@@ -81,7 +82,7 @@ void Game::Main(const COORD & Position)
             case SETTINGS:
             {
                 cls();
-                Options(Position);
+                Options();
                 cls();
                 select = 0;
                 MainBlockInit(Position);
@@ -99,8 +100,9 @@ void Game::Main(const COORD & Position)
     }
 }
 
-void Game::Options(COORD Position)
+void Game::Options()
 {
+    COORD Position = { 10 , GetConsoleSize().X / 2 + 10};
     Block demoBlock[5];
     demoBlock[0].SetColor(COLOR_MAP);
     demoBlock[1].SetColor(COLOR_WALL);
@@ -109,7 +111,7 @@ void Game::Options(COORD Position)
     demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
     for(size_t i = 0; i < 5; i++)
     {
-        COORD left = {Position.X + i * 2, Position.Y};
+        COORD left = {Position.X + i * 2, Position.Y };
         COORD right = {Position.X + i * 2, Position.Y + 1};
         demoBlock[i].SetCoord(left, right);
         demoBlock[i].SetFormat(FORMAT);
@@ -128,7 +130,6 @@ void Game::Options(COORD Position)
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
         std::cout << (uint8_t)demoBlock[i].GetFormat();
     }
-    system("pause");
 }
 
 void Game::SnakeGame(void)

@@ -27,8 +27,8 @@ public:
     void MainBlockInit(COORD);
     size_t Navigate(const COORD &);
     void Start(void);
-    void Main(const COORD &);
-    void Options(COORD);
+    void Main(COORD);
+    void Options();
     void SnakeGame(void);
     void Exit(void);
 
