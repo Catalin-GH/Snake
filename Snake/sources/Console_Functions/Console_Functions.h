@@ -3,8 +3,8 @@
 #include <Windows.h>
 #include <cstdio>
 
-struct ConsoleSize;
-struct OriginalConsoleSize;
+#define CONSOLE_LENGTH 80
+#define CONSOLE_HEIGHT 40
 
 void gotoxy(size_t, size_t);
 void Show_Cursor(bool);

@@ -1,17 +1,5 @@
 #include "Console_Functions.h"
 
-struct ConsoleSize
-{
-    int width;
-    int height;
-} CSize;
-
-struct OriginalConsoleSize
-{
-    int origWidth;
-    int origHeight;
-} OrigCSize;
-
 void gotoxy(size_t x, size_t y)
 {
     COORD pos = { (SHORT)x, (SHORT)y };
@@ -67,14 +55,15 @@ void SetTextColor(WORD Color)
 void SetConsoleFontSize()
 {
     CONSOLE_FONT_INFOEX cfi;
-    cfi.cbSize = sizeof(cfi);
+    cfi.cbSize = sizeof cfi;
     cfi.nFont = 0;
     cfi.dwFontSize.X = 0;
-    cfi.dwFontSize.Y = 25;
+    cfi.dwFontSize.Y = 20;
     cfi.FontFamily = FF_DONTCARE;
-    cfi.FontWeight = FW_NORMAL;
-    wcscpy_s(cfi.FaceName, L"Consolas"); // Choose your font
+    //cfi.FontWeight = FW_NORMAL;
+    wcscpy(cfi.FaceName, L"Consolas");
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+
 }
 
 COORD GetConsoleSize()

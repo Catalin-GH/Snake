@@ -2,11 +2,13 @@
 
 Game::Game(void)
 {
+    system("MODE CON COLS=80 LINES=40");
+    SetConsoleFontSize();
     OptionsName[0] = "START";
     OptionsName[1] = "OPTIONS";
     OptionsName[2] = "EXIT";
-    COORD OriginPosition = { 5, 5 };
     int length = 20;
+    COORD OriginPosition = { (CONSOLE_HEIGHT - length ) / 2 , (CONSOLE_LENGTH - length * 2) / 2 };
     map = new Map(length, OriginPosition);
     food = new Food();
 }
@@ -15,7 +17,6 @@ void Game::MainBlock(COORD Position, size_t Color, size_t iter)
 {
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
-    SetConsoleFontSize();
     std::cout << OptionsName[iter];
 }
 
@@ -28,8 +29,7 @@ void Game::MainBlockInit(COORD Position)
 
 void Game::Start(void)
 {
-    SetConsoleSize(800, 600);
-    COORD Position = { GetConsoleSize().X / 3, 10 };
+    COORD Position = { CONSOLE_LENGTH / 2 - OptionsName[0].size() , 15 };
     Main(Position);
 }
 
@@ -102,7 +102,18 @@ void Game::Main(COORD Position)
 
 void Game::Options()
 {
-    COORD Position = { 10 , GetConsoleSize().X / 2 + 10};
+    size_t ColorValues[5];
+    /*Name the options*/
+    std::string Options[6];
+    Options[0] = "<-     Map    ->";
+    Options[1] = "<-    Wall    ->";
+    Options[2] = "<-    Food    ->";
+    Options[3] = "<-   Snake    ->";
+    Options[4] = "<- Head snake ->";
+    Options[5] = "      Back      ";
+
+    COORD PositionBlock = { CONSOLE_HEIGHT / 2 - 5, CONSOLE_LENGTH / 2 + 15 };
+    /* set-up block elements */
     Block demoBlock[5];
     demoBlock[0].SetColor(COLOR_MAP);
     demoBlock[1].SetColor(COLOR_WALL);
@@ -111,12 +122,15 @@ void Game::Options()
     demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
     for(size_t i = 0; i < 5; i++)
     {
-        COORD left = {Position.X + i * 2, Position.Y };
-        COORD right = {Position.X + i * 2, Position.Y + 1};
+        COORD left = {PositionBlock.X + i * 2, PositionBlock.Y };
+        COORD right = {PositionBlock.X + i * 2, PositionBlock.Y + 1};
         demoBlock[i].SetCoord(left, right);
         demoBlock[i].SetFormat(FORMAT);
+
+        ColorValues[i] = demoBlock[i].GetColor();
     }
 
+    /* print blocks in console*/
     for(size_t i = 0; i < 5; i++)
     {
         size_t lx = demoBlock[i].GetLeft().X;
@@ -129,6 +143,110 @@ void Game::Options()
         gotoxy(ry, rx);             //(col, row)
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
         std::cout << (uint8_t)demoBlock[i].GetFormat();
+    }
+
+    COORD Position = {CONSOLE_LENGTH / 2 - 10, CONSOLE_HEIGHT / 2 - 5};
+    /*print opstions in console*/
+    gotoxy(Position.X, Position.Y);
+    SetTextColor(COLOR_MAIN_SELECT);
+    std::cout << Options[0];
+    for(size_t i = 1; i < 6; i++)
+    {
+        gotoxy(Position.X, Position.Y + i * 2);
+        SetTextColor(COLOR_MAIN);
+        std::cout << Options[i];
+    }
+
+    size_t select = 0;
+    size_t Color = demoBlock[select].GetColor();
+    bool bVal = FALSE;
+    while (!bVal)
+    {
+        Show_Cursor(FALSE);
+        size_t previousSelected;
+        if (GetAsyncKeyState(VK_DOWN))
+        {
+            previousSelected = select;
+            if (select < 5)
+            {
+                gotoxy(Position.X, Position.Y + previousSelected * 2);
+                SetTextColor(COLOR_MAIN);
+                std::cout << Options[previousSelected];
+                ++select;
+                gotoxy(Position.X, Position.Y + select * 2);
+                SetTextColor(COLOR_MAIN_SELECT);
+                std::cout << Options[select];
+
+                Color = demoBlock[select].GetColor();
+            }
+            Sleep(100);
+        }
+        else if (GetAsyncKeyState(VK_UP))
+        {
+            previousSelected = select;
+            if (select > 0)
+            {
+                gotoxy(Position.X, Position.Y + previousSelected * 2);
+                SetTextColor(COLOR_MAIN);
+                std::cout << Options[previousSelected];
+                --select;
+                gotoxy(Position.X, Position.Y + select * 2);
+                SetTextColor(COLOR_MAIN_SELECT);
+                std::cout << Options[select];
+
+                Color = demoBlock[select].GetColor();
+            }
+            Sleep(100);
+        }
+        else if(GetAsyncKeyState(VK_LEFT))
+        {
+            if(Color > 0)
+            {
+                --Color;
+                size_t lx = demoBlock[select].GetLeft().X;
+                size_t ly = demoBlock[select].GetLeft().Y;
+                size_t rx = demoBlock[select].GetRight().X;
+                size_t ry = demoBlock[select].GetRight().Y;
+                gotoxy(ly, lx);             //(col, row)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
+                std::cout << (uint8_t)demoBlock[select].GetFormat();
+                gotoxy(ry, rx);             //(col, row)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
+                std::cout << (uint8_t)demoBlock[select].GetFormat();
+            }
+            Sleep(100);
+        }
+        else if(GetAsyncKeyState(VK_RIGHT))
+        {
+            if(Color < 15)
+            {
+                ++Color;
+                size_t lx = demoBlock[select].GetLeft().X;
+                size_t ly = demoBlock[select].GetLeft().Y;
+                size_t rx = demoBlock[select].GetRight().X;
+                size_t ry = demoBlock[select].GetRight().Y;
+                gotoxy(ly, lx);             //(col, row)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
+                std::cout << (uint8_t)demoBlock[select].GetFormat();
+                gotoxy(ry, rx);             //(col, row)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
+                std::cout << (uint8_t)demoBlock[select].GetFormat();
+            }
+            Sleep(100);
+        }
+        if (GetAsyncKeyState(VK_RETURN) && select == 5)
+        {
+            bVal = TRUE;
+        }
+        switch (select)
+        {
+        case 0: COLOR_WALL = Color; break;
+        case 1: COLOR_MAP = Color; break;
+        case 2: COLOR_FOOD = Color; break;
+        case 3: COLOR_SNAKE = Color; break;
+        case 4: COLOR_SNAKE_HEAD = Color; break;
+        }
+        Sleep(200);
     }
 }
 
