@@ -2,8 +2,10 @@
 
 Game::Game(void)
 {
-    system("MODE CON COLS=80 LINES=40");
     SetConsoleFontSize();
+    SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
+    //DisableMaximizeButton();
+    //DisableResize();
     OptionsName[0] = "START";
     OptionsName[1] = "OPTIONS";
     OptionsName[2] = "EXIT";
@@ -105,10 +107,10 @@ void Game::Options()
     size_t ColorValues[5];
     /*Name the options*/
     std::string Options[6];
-    Options[0] = "<-     Map    ->";
+    Options[0] = "<-    Map    ->";
     Options[1] = "<-    Wall    ->";
     Options[2] = "<-    Food    ->";
-    Options[3] = "<-   Snake    ->";
+    Options[3] = "<-    Snake   ->";
     Options[4] = "<- Head snake ->";
     Options[5] = "      Back      ";
 

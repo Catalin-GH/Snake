@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Windows.h>
+#include <stdexcept>
 #include <cstdio>
+#include <iostream>
 
 #define CONSOLE_LENGTH 80
 #define CONSOLE_HEIGHT 40
@@ -14,4 +16,8 @@ void SetConsoleSize(int, int);
 void SetConsolePosition(int, int);
 void SetTextColor(WORD);
 void SetConsoleFontSize();
+void SetConsoleWindowSize(int, int);
 COORD GetConsoleSize();
+
+void DisableMaximizeButton();
+void DisableResize();

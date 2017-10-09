@@ -25,7 +25,6 @@ public:
     Game(void);
     void MainBlock(COORD, size_t, size_t);
     void MainBlockInit(COORD);
-    size_t Navigate(const COORD &);
     void Start(void);
     void Main(COORD);
     void Options();
