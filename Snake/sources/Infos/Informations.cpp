@@ -3,6 +3,7 @@
 void Infos::PrintPointsInConsole(const COORD & StartPointForWriting)
 {
     gotoxy(StartPointForWriting.X, StartPointForWriting.Y);
+    SetTextColor(15);
     std::cout << "Points: " << GetGainedPoints();
 }
 

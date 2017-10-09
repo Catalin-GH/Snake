@@ -4,15 +4,17 @@ Game::Game(void)
 {
     SetConsoleFontSize();
     SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
-    //DisableMaximizeButton();
-    //DisableResize();
+    DisableMaximizeButton();
+    DisableResize();
+    SetConsoleTitle("Snake Game");
     OptionsName[0] = "START";
     OptionsName[1] = "OPTIONS";
     OptionsName[2] = "EXIT";
     int length = 20;
     COORD OriginPosition = { (CONSOLE_HEIGHT - length ) / 2 , (CONSOLE_LENGTH - length * 2) / 2 };
-    map = new Map(length, OriginPosition);
-    food = new Food();
+    _map = new Map(length, OriginPosition);
+    _food = new Food();
+    _gameInfos = new Infos();
 }
 
 void Game::MainBlock(COORD Position, size_t Color, size_t iter)
@@ -254,31 +256,36 @@ void Game::Options()
 
 void Game::SnakeGame(void)
 {
-    map->Build();
-    map->Graphic();
-    COORD RandPoint = map->RandomPosition();
-    food->SetPosition(map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
-    snake = new Snake(map->GetCenterBlock());
-    map->UpdateObject(snake->GetSnake());
-    map->GraphicObject(snake->GetSnake());
-    map->UpdateObject(food->GetFood());
-    map->GraphicObject(food->GetFood());
+    _map->Build();
+    _map->Graphic();
+    COORD Position = {2, 3};
+    _gameInfos->PrintPointsInConsole(Position);
+    COORD RandPoint = _map->RandomPosition();
+    _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
+    _snake = new Snake(_map->GetCenterBlock());
+    _map->UpdateObject(_snake->GetSnake());
+    _map->GraphicObject(_snake->GetSnake());
+    _map->UpdateObject(_food->GetFood());
+    _map->GraphicObject(_food->GetFood());
     while (TRUE)
     {
-        map->DeleteObject(snake->GetSnake());
-        map->GraphicObject(snake->GetSnake());
-        snake->UpdatePosition(snake->ArrowKeyPress());
-        if (map->UpdateObject(snake->GetSnake()) && !snake->HitBodyElement())
+        _map->DeleteObject(_snake->GetSnake());
+        _map->GraphicObject(_snake->GetSnake());
+        _snake->UpdatePosition(_snake->ArrowKeyPress());
+        if (_map->UpdateObject(_snake->GetSnake()) && !_snake->HitBodyElement())
         {
-            map->GraphicObject(snake->GetSnake());
-            if (snake->GetSnake()[0].GetPosition() == food->GetBlock().GetPosition())
+            _map->GraphicObject(_snake->GetSnake());
+            if (_snake->GetSnake()[0].GetPosition() == _food->GetBlock().GetPosition())
             {
-                snake->InsertBodyElement(snake->GetBlockTemplate(map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
-                COORD RandPoint = map->RandomPosition();
-                map->DeleteObject(food->GetFood());
-                food->SetPosition(map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
-                map->UpdateObject(food->GetFood());
-                map->GraphicObject(food->GetFood());
+                COORD Position = {2, 3};
+                _gameInfos->IncreasePoints();
+                _gameInfos->PrintPointsInConsole(Position);
+                _snake->InsertBodyElement(_snake->GetBlockTemplate(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
+                COORD RandPoint = _map->RandomPosition();
+                _map->DeleteObject(_food->GetFood());
+                _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
+                _map->UpdateObject(_food->GetFood());
+                _map->GraphicObject(_food->GetFood());
             }
         }
         else

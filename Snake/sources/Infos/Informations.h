@@ -6,12 +6,12 @@
 class Infos
 {
 private:
-    int GainedPoints;
+    size_t GainedPoints;
 public:
     Infos() { GainedPoints = 0; }
     void PrintPointsInConsole(const COORD &);
     void GameOverMessage(const COORD &);
     void IncreasePoints();
-    int GetGainedPoints() const { return GainedPoints; }
+    size_t GetGainedPoints() const { return GainedPoints; }
 
 };

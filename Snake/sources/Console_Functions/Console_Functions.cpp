@@ -15,14 +15,6 @@ void Show_Cursor(bool showFlag)
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
-void FullScreen_Console(bool FullScreenFlag)
-{
-    if(FullScreenFlag == TRUE)
-    {
-        SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, 0);
-    }
-}
-
 void cls()
 {
     system("cls");
@@ -34,12 +26,6 @@ void SetConsoleSize(int width, int height)
     RECT ConsoleRect;
     GetWindowRect(console, &ConsoleRect); 
     MoveWindow(console, ConsoleRect.left, ConsoleRect.top, width, height, TRUE);
-}
-
-void SetConsolePosition(int width, int height)
-{
-    HWND console = GetConsoleWindow();
-    SetWindowPos(console, HWND_TOP, width, height, 0, 0, SWP_NOSIZE);
 }
 
 void SetTextColor(WORD Color)
@@ -95,7 +81,7 @@ void SetConsoleWindowSize(int x, int y)
         throw std::runtime_error("Unable to retrieve screen buffer info.");
 
     SMALL_RECT& winInfo = bufferInfo.srWindow;
-    COORD windowSize = { winInfo.Right - winInfo.Left + 1, winInfo.Bottom - winInfo.Top + 1 };
+    COORD windowSize = { winInfo.Right - winInfo.Left + 5, winInfo.Bottom - winInfo.Top + 5 };
 
     if (windowSize.X > x || windowSize.Y > y)
     {
@@ -136,6 +122,11 @@ COORD GetConsoleSize()
     size.X = csbiInfo.dwSize.X;
     size.Y = csbiInfo.dwSize.Y;
     return size;
+}
+
+void SetConsoleTitle(std::string Title)
+{
+    SetConsoleTitle(Title);
 }
 
 void DisableMaximizeButton()

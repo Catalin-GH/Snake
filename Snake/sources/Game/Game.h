@@ -17,10 +17,10 @@ class Game
 {
 private:
     std::string OptionsName[3];
-    Map * map;
-    Snake * snake;
-    Food * food;
-    Infos GameInfos;
+    Map * _map;
+    Snake * _snake;
+    Food * _food;
+    Infos * _gameInfos;
 public:
     Game(void);
     void MainBlock(COORD, size_t, size_t);
