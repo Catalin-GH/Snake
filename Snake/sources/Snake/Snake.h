@@ -8,8 +8,8 @@
 #include <vector>
 #include <fstream>
 
-extern int COLOR_SNAKE;
-extern int COLOR_SNAKE_HEAD;
+extern size_t COLOR_SNAKE;
+extern size_t COLOR_SNAKE_HEAD;
 
 class Snake
 {

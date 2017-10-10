@@ -3,5 +3,5 @@
 int main(void)
 {
     Game game;
-    game.Start();
+    game.MainStart();
 }

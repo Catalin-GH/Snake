@@ -87,26 +87,17 @@ bool Map::UpdateObject(const std::vector<Block> & Object)
     return bVal;
 }
 
-void Map::GraphicObject(const std::vector<Block> & Object)
+void Map::PrintGraphicObject(const std::vector<Block> & Object)
 {
     for (size_t i = 0; i < Object.size(); i++)
     {
         size_t x = Object[i].GetPosition().X;
         size_t y = Object[i].GetPosition().Y;
-        size_t lx = (_block[x][y]).GetLeft().X;
-        size_t ly = (_block[x][y]).GetLeft().Y;
-        size_t rx = (_block[x][y]).GetRight().X;
-        size_t ry = (_block[x][y]).GetRight().Y;
-        gotoxy(ly, lx);             //(col, row)
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)(_block[x][y]).GetColor());
-        std::cout << (uint8_t)GetBlock(x, y).GetFormat();
-        gotoxy(ry, rx);             //(col, row)
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)(_block[x][y]).GetColor());
-        std::cout << (uint8_t)GetBlock(x, y).GetFormat();
+        Block::PrintBlock(_block[x][y], (WORD)(_block[x][y]).GetColor());
     }
 }
 
-void Map::DeleteObject(const std::vector<Block> & Object)
+void Map::DeleteGraphicObject(const std::vector<Block> & Object)
 {
     for(size_t i = 0; i < Object.size(); i++)
     {
@@ -117,22 +108,13 @@ void Map::DeleteObject(const std::vector<Block> & Object)
     }
 }
 
-void Map::Graphic(void)
+void Map::PrintGraphic(void)
 {
     for (size_t i = 0; i < _rows; i++)
     {
         for (size_t j = 0; j < _cols; j++)
         {
-            size_t lx = (_block[i][j]).GetLeft().X;
-            size_t ly = (_block[i][j]).GetLeft().Y;
-            size_t rx = (_block[i][j]).GetRight().X;
-            size_t ry = (_block[i][j]).GetRight().Y;
-            gotoxy(ly, lx);             //(col, row)
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)(_block[i][j]).GetColor());
-            std::cout << (uint8_t)GetBlock(i, j).GetFormat();
-            gotoxy(ry, rx);             //(col, row)
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)(_block[i][j]).GetColor());
-            std::cout << (uint8_t)GetBlock(i, j).GetFormat();
+            Block::PrintBlock(_block[i][j], (WORD)(_block[i][j]).GetColor());
         }
         std::cout << std::endl;
     }

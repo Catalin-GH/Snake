@@ -43,6 +43,20 @@ void Block::ShowPosition(std::ostream& stream)
     return;
 }
 
+void Block::PrintBlock(const Block & Block, WORD Color)
+{
+    size_t lx = Block.GetLeft().X;
+    size_t ly = Block.GetLeft().Y;
+    size_t rx = Block.GetRight().X;
+    size_t ry = Block.GetRight().Y;
+    gotoxy(ly, lx);             //(col, row)
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
+    std::cout << (uint8_t)Block.GetFormat();
+    gotoxy(ry, rx);             //(col, row)
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
+    std::cout << (uint8_t)Block.GetFormat();
+}
+
 bool Block::operator==(const Block & b1)
 {
     bool bVal = FALSE;

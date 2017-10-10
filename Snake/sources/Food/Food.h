@@ -6,7 +6,7 @@
 #include "Block.h"
 #include <vector>
 
-extern int COLOR_FOOD;
+extern size_t COLOR_FOOD;
 
 class Food
 {

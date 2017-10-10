@@ -17,19 +17,23 @@ class Game
 {
 private:
     std::string OptionsName[3];
+    std::string Options[6];
     Map * _map;
     Snake * _snake;
     Food * _food;
     Infos * _gameInfos;
+
 public:
     Game(void);
+    ~Game(void);
     void MainBlock(COORD, size_t, size_t);
     void MainBlockInit(COORD);
-    void Start(void);
+    void MainStart(void);
     void Main(COORD);
-    void Options();
+    void MainOptions();
     void SnakeGame(void);
-    void Exit(void);
+    void MainExit(void);
+    void ConsoleSettings();
 
     COORD operator=(COORD);
 };

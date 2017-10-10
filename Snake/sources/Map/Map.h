@@ -8,11 +8,11 @@
 #include <cstdlib>
 #include <time.h>
 
-extern int COLOR_MAP;
-extern int COLOR_SNAKE;
-extern int COLOR_SNAKE_HEAD;
-extern int COLOR_WALL;
-extern int COLOR_FOOD;
+extern size_t COLOR_MAP;
+extern size_t COLOR_SNAKE;
+extern size_t COLOR_SNAKE_HEAD;
+extern size_t COLOR_WALL;
+extern size_t COLOR_FOOD;
 
 class Map
 {
@@ -30,14 +30,14 @@ public:
     Block GetBlock(size_t, size_t) const;
     Block GetCenterBlock() const;
 
-    void Build(void);       // se initializeaza harta
-    bool UpdateObject(const std::vector<Block> &);      // se introduce obiectul pe harta
-    void GraphicObject(const std::vector<Block> &);        //se afiseaza obiectul pe harta
-    void DeleteObject(const std::vector<Block> &);      // se sterge obiectul
-    void Graphic(void);     //se afiseaza harta
+    void Build(void);
+    bool UpdateObject(const std::vector<Block> &);
+    void PrintGraphicObject(const std::vector<Block> &);
+    void DeleteGraphicObject(const std::vector<Block> &);
+    void PrintGraphic(void);
     COORD RandomPosition(void);
 
-    void SeeInfos(void);        //informatii despre harta
+    void SeeInfos(void);
 
     inline COORD operator=(COORD NewPosition)
     {

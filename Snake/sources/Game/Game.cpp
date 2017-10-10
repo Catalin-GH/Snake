@@ -2,19 +2,23 @@
 
 Game::Game(void)
 {
-    SetConsoleFontSize();
-    SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
-    DisableMaximizeButton();
-    DisableResize();
-    SetConsoleTitle("Snake Game");
+    ConsoleSettings();
     OptionsName[0] = "START";
     OptionsName[1] = "OPTIONS";
     OptionsName[2] = "EXIT";
     int length = 20;
-    COORD OriginPosition = { (CONSOLE_HEIGHT - length ) / 2 , (CONSOLE_LENGTH - length * 2) / 2 };
+    COORD OriginPosition = { (CONSOLE_HEIGHT - length) / 2 , (CONSOLE_LENGTH - length * 2) / 2 };
     _map = new Map(length, OriginPosition);
     _food = new Food();
     _gameInfos = new Infos();
+}
+
+Game::~Game(void)
+{
+    delete _map;
+    delete _snake;
+    delete _food;
+    delete _gameInfos;
 }
 
 void Game::MainBlock(COORD Position, size_t Color, size_t iter)
@@ -31,7 +35,7 @@ void Game::MainBlockInit(COORD Position)
     MainBlock(Position, COLOR_MAIN, 2);
 }
 
-void Game::Start(void)
+void Game::MainStart(void)
 {
     COORD Position = { CONSOLE_LENGTH / 2 - OptionsName[0].size() , 15 };
     Main(Position);
@@ -72,13 +76,10 @@ void Game::Main(COORD Position)
         {
             switch (select)
             {
-            case START_GAME: 
+            case START_GAME:
             {
                 cls();
                 SnakeGame();
-                /*
-                anything else to write
-                */
                 cls();
                 select = 0;
                 MainBlockInit(Position);
@@ -86,15 +87,15 @@ void Game::Main(COORD Position)
             case SETTINGS:
             {
                 cls();
-                Options();
+                MainOptions();
                 cls();
                 select = 0;
                 MainBlockInit(Position);
             }break;
-            case EXIT: 
+            case EXIT:
             {
                 cls();
-                Exit();
+                MainExit();
                 select = 0;
                 bVal = TRUE;
             }break;
@@ -104,11 +105,9 @@ void Game::Main(COORD Position)
     }
 }
 
-void Game::Options()
+void Game::MainOptions()
 {
-    size_t ColorValues[5];
     /*Name the options*/
-    std::string Options[6];
     Options[0] = "<-    Map    ->";
     Options[1] = "<-    Wall    ->";
     Options[2] = "<-    Food    ->";
@@ -117,17 +116,19 @@ void Game::Options()
     Options[5] = "      Back      ";
 
     COORD PositionBlock = { CONSOLE_HEIGHT / 2 - 5, CONSOLE_LENGTH / 2 + 15 };
+
     /* set-up block elements */
+    size_t ColorValues[5];
     Block demoBlock[5];
     demoBlock[0].SetColor(COLOR_MAP);
     demoBlock[1].SetColor(COLOR_WALL);
     demoBlock[2].SetColor(COLOR_FOOD);
     demoBlock[3].SetColor(COLOR_SNAKE);
     demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
-    for(size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 5; i++)
     {
-        COORD left = {PositionBlock.X + i * 2, PositionBlock.Y };
-        COORD right = {PositionBlock.X + i * 2, PositionBlock.Y + 1};
+        COORD left = { PositionBlock.X + i * 2, PositionBlock.Y };
+        COORD right = { PositionBlock.X + i * 2, PositionBlock.Y + 1 };
         demoBlock[i].SetCoord(left, right);
         demoBlock[i].SetFormat(FORMAT);
 
@@ -135,26 +136,18 @@ void Game::Options()
     }
 
     /* print blocks in console*/
-    for(size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 5; i++)
     {
-        size_t lx = demoBlock[i].GetLeft().X;
-        size_t ly = demoBlock[i].GetLeft().Y;
-        size_t rx = demoBlock[i].GetRight().X;
-        size_t ry = demoBlock[i].GetRight().Y;
-        gotoxy(ly, lx);             //(col, row)
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
-        std::cout << (uint8_t)demoBlock[i].GetFormat();
-        gotoxy(ry, rx);             //(col, row)
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)demoBlock[i].GetColor());
-        std::cout << (uint8_t)demoBlock[i].GetFormat();
+        Block::PrintBlock(demoBlock[i], (WORD)demoBlock[i].GetColor());
     }
 
-    COORD Position = {CONSOLE_LENGTH / 2 - 10, CONSOLE_HEIGHT / 2 - 5};
+    COORD Position = { CONSOLE_LENGTH / 2 - 10, CONSOLE_HEIGHT / 2 - 5 };
+
     /*print opstions in console*/
     gotoxy(Position.X, Position.Y);
     SetTextColor(COLOR_MAIN_SELECT);
     std::cout << Options[0];
-    for(size_t i = 1; i < 6; i++)
+    for (size_t i = 1; i < 6; i++)
     {
         gotoxy(Position.X, Position.Y + i * 2);
         SetTextColor(COLOR_MAIN);
@@ -202,39 +195,21 @@ void Game::Options()
             }
             Sleep(100);
         }
-        else if(GetAsyncKeyState(VK_LEFT))
+        else if (GetAsyncKeyState(VK_LEFT))
         {
-            if(Color > 0)
+            if (Color > 0)
             {
                 --Color;
-                size_t lx = demoBlock[select].GetLeft().X;
-                size_t ly = demoBlock[select].GetLeft().Y;
-                size_t rx = demoBlock[select].GetRight().X;
-                size_t ry = demoBlock[select].GetRight().Y;
-                gotoxy(ly, lx);             //(col, row)
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
-                std::cout << (uint8_t)demoBlock[select].GetFormat();
-                gotoxy(ry, rx);             //(col, row)
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
-                std::cout << (uint8_t)demoBlock[select].GetFormat();
+                Block::PrintBlock(demoBlock[select], (WORD)Color);
             }
             Sleep(100);
         }
-        else if(GetAsyncKeyState(VK_RIGHT))
+        else if (GetAsyncKeyState(VK_RIGHT))
         {
-            if(Color < 15)
+            if (Color < 15)
             {
                 ++Color;
-                size_t lx = demoBlock[select].GetLeft().X;
-                size_t ly = demoBlock[select].GetLeft().Y;
-                size_t rx = demoBlock[select].GetRight().X;
-                size_t ry = demoBlock[select].GetRight().Y;
-                gotoxy(ly, lx);             //(col, row)
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
-                std::cout << (uint8_t)demoBlock[select].GetFormat();
-                gotoxy(ry, rx);             //(col, row)
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD)Color);
-                std::cout << (uint8_t)demoBlock[select].GetFormat();
+                Block::PrintBlock(demoBlock[select], (WORD)Color);
             }
             Sleep(100);
         }
@@ -257,49 +232,62 @@ void Game::Options()
 void Game::SnakeGame(void)
 {
     _map->Build();
-    _map->Graphic();
-    COORD Position = {2, 3};
+    _map->PrintGraphic();
+    COORD Position = { 2, 3 };
     _gameInfos->PrintPointsInConsole(Position);
     COORD RandPoint = _map->RandomPosition();
     _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
     _snake = new Snake(_map->GetCenterBlock());
     _map->UpdateObject(_snake->GetSnake());
-    _map->GraphicObject(_snake->GetSnake());
+    _map->PrintGraphicObject(_snake->GetSnake());
     _map->UpdateObject(_food->GetFood());
-    _map->GraphicObject(_food->GetFood());
+    _map->PrintGraphicObject(_food->GetFood());
+    bool bVal = FALSE;
     while (TRUE)
     {
-        _map->DeleteObject(_snake->GetSnake());
-        _map->GraphicObject(_snake->GetSnake());
+        _map->DeleteGraphicObject(_snake->GetSnake());
+        _map->PrintGraphicObject(_snake->GetSnake());
         _snake->UpdatePosition(_snake->ArrowKeyPress());
         if (_map->UpdateObject(_snake->GetSnake()) && !_snake->HitBodyElement())
         {
-            _map->GraphicObject(_snake->GetSnake());
+            _map->PrintGraphicObject(_snake->GetSnake());
             if (_snake->GetSnake()[0].GetPosition() == _food->GetBlock().GetPosition())
             {
-                COORD Position = {2, 3};
+                COORD Position = { 2, 3 };
                 _gameInfos->IncreasePoints();
                 _gameInfos->PrintPointsInConsole(Position);
+
                 _snake->InsertBodyElement(_snake->GetBlockTemplate(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
                 COORD RandPoint = _map->RandomPosition();
-                _map->DeleteObject(_food->GetFood());
+                _map->DeleteGraphicObject(_food->GetFood());
                 _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
                 _map->UpdateObject(_food->GetFood());
-                _map->GraphicObject(_food->GetFood());
+                _map->PrintGraphicObject(_food->GetFood());
             }
         }
         else
         {
-            /*gotoxy(0, 0);
-            std::cout << "Game over!";
-            system("pause");*/
+            COORD Position = { CONSOLE_LENGTH / 2 - 8, 3 };
+            while (!GetAsyncKeyState(VK_RETURN))
+            {
+                _gameInfos->GameOverMessage(Position);
+            }
             break;
         }
         Sleep(SPEED);
     }
 }
 
-void Game::Exit(void)
+void Game::ConsoleSettings()
+{
+    SetConsoleFontSize();
+    SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
+    DisableMaximizeButton();
+    DisableResize();
+    SetConsoleTitle("Snake Game");
+}
+
+void Game::MainExit()
 {
 
 }

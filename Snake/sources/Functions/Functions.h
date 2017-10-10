@@ -2,13 +2,11 @@
 
 #include <Windows.h>
 
-//#define COLOR_WALL 7
-//#define COLOR_MAP 8
-//#define COLOR_FOOD 11
 #define COLOR_MAIN 14
 #define COLOR_MAIN_SELECT 12
-//#define COLOR_SNAKE 9
-//#define COLOR_SNAKE_HEAD 10
+#define COLOR_INFO_POINT 5
+#define COLOR_INFO 15
+#define COLOR_GAME_OVER 15
 
 #define FORMAT 219
 

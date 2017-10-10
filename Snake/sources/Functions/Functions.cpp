@@ -1,10 +1,10 @@
 #include "Functions.h"
 
-int COLOR_WALL = 7;
-int COLOR_MAP = 8;
-int COLOR_FOOD = 11;
-int COLOR_SNAKE = 9;
-int COLOR_SNAKE_HEAD = 3;
+size_t COLOR_WALL = 7;
+size_t COLOR_MAP = 8;
+size_t COLOR_FOOD = 11;
+size_t COLOR_SNAKE = 9;
+size_t COLOR_SNAKE_HEAD = 3;
 
 bool operator==(const COORD & left, const COORD & right)
 {

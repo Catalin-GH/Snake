@@ -4,12 +4,13 @@
 #include <cstdint>
 #include "Functions.h"
 #include <iostream>
+#include "Console_Functions.h"
 
 class Block
 {
 private:
-    size_t _format;      //valoare ascii
-    size_t _value;     //clasificare
+    size_t _format;      //ascii value
+    size_t _value;     //clasification
     size_t _color;
     COORD _left;
     COORD _right;
@@ -57,6 +58,8 @@ public:
     void ShowLeft(std::ostream&);
     void ShowRight(std::ostream&);
     void ShowPosition(std::ostream&);
+
+    static void PrintBlock(const Block &, WORD);
 
     inline COORD operator=(COORD);
     inline friend bool operator==(const COORD &, const COORD &);
