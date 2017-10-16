@@ -2,6 +2,11 @@
 
 Snake::Snake(const Block & StartPosition)
 {
+    Build(StartPosition);
+}
+
+void Snake::Build(const Block & StartPosition)
+{
     for (size_t i = 0; i < SNAKE_LENGTH; i++)
     {
         Block block;
@@ -14,16 +19,29 @@ Snake::Snake(const Block & StartPosition)
         block.SetRight(right);
         block.SetPosition(position);
         block.SetColor((i == 0) ? COLOR_SNAKE_HEAD : COLOR_SNAKE);
-        _snake.push_back(block);
+        _object.push_back(block);
     }
+}
+
+Block Snake::GetBlockTemplate(COORD left, COORD right, COORD position)
+{
+    Block block;
+    block.SetValue(FORMAT);
+    block.SetColor(COLOR_SNAKE);
+    block.SetFormat(IS_SNAKE);
+    block.SetLeft(left);
+    block.SetRight(right);
+    block.SetPosition(position);
+
+    return block;
 }
 
 bool Snake::HitBodyElement(void)
 {
     bool bVal = FALSE;
-    for(size_t i = 1; i < _snake.size(); i++)
+    for (size_t i = 1; i < _object.size(); i++)
     {
-        if(_snake[0].GetPosition() == _snake[i].GetPosition())
+        if (_object[0].GetPosition() == _object[i].GetPosition())
         {
             bVal = TRUE;
             break;
@@ -34,16 +52,16 @@ bool Snake::HitBodyElement(void)
 
 void Snake::InsertBodyElement(const Block & NewBlock)
 {
-    _snake.push_back(NewBlock);
+    _object.push_back(NewBlock);
 }
 
 void Snake::UpdatePosition(COORD HeadPosition)
 {
     COORD Position = HeadPosition;
-    if (Position == _snake[0].GetPosition())
+    if (Position == _object[0].GetPosition())
     {
-        COORD head = _snake[0].GetPosition();
-        COORD body1 = _snake[1].GetPosition();
+        COORD head = _object[0].GetPosition();
+        COORD body1 = _object[1].GetPosition();
         if (head.Y == body1.Y)
         {
             Position.Y = head.Y;
@@ -68,46 +86,46 @@ void Snake::UpdatePosition(COORD HeadPosition)
                 Position.Y = head.Y + 1;
             }
         }
-        for (size_t it = _snake.size() - 1; it > 0; it--)
+        for (size_t it = _object.size() - 1; it > 0; it--)
         {
-            _snake[it].SetPosition(_snake[it - 1].GetPosition());
+            _object[it].SetPosition(_object[it - 1].GetPosition());
         }
-        _snake[0].SetPosition(Position);
+        _object[0].SetPosition(Position);
     }
-    else if(Position == _snake[1].GetPosition())
+    else if (Position == _object[1].GetPosition())
     {
 
     }
     else
     {
-        for (size_t it = _snake.size() - 1; it > 0; it--)
+        for (size_t it = _object.size() - 1; it > 0; it--)
         {
-            _snake[it].SetPosition(_snake[it - 1].GetPosition());
+            _object[it].SetPosition(_object[it - 1].GetPosition());
         }
-        _snake[0].SetPosition(HeadPosition);
+        _object[0].SetPosition(HeadPosition);
     }
 }
 
 COORD Snake::ArrowKeyPress()
 {
-    COORD newPosition = _snake[0].GetPosition();
+    COORD newPosition = _object[0].GetPosition();
 
-    if(GetAsyncKeyState(VK_LEFT))
+    if (GetAsyncKeyState(VK_LEFT))
     {
         newPosition.Y -= 1;
         return newPosition;
     }
-    if(GetAsyncKeyState(VK_UP))
+    if (GetAsyncKeyState(VK_UP))
     {
         newPosition.X -= 1;
         return newPosition;
     }
-    if(GetAsyncKeyState(VK_RIGHT))
+    if (GetAsyncKeyState(VK_RIGHT))
     {
         newPosition.Y += 1;
         return newPosition;
     }
-    if(GetAsyncKeyState(VK_DOWN))
+    if (GetAsyncKeyState(VK_DOWN))
     {
         newPosition.X += 1;
     }
@@ -130,33 +148,10 @@ COORD Snake::ArrowKeyPress()
     return newPosition;
 }
 
-void Snake::SeeInfos()
+COORD Snake::operator=(const COORD & New_Pos)
 {
-    std::ofstream eout("S_format.txt", std::ios_base::app);
-    std::ofstream vout("S_value.txt", std::ios_base::app);
-    std::ofstream cdout("S_coordinates.txt", std::ios_base::app);
-    std::ofstream cout("S_color.txt", std::ios_base::app);
-    std::ofstream pout("S_position.txt", std::ios_base::app);
-    for (size_t j = 0; j < _snake.size(); j++)
-    {
-        _snake[j].ShowColor(cout);
-        _snake[j].ShowFormat(eout);
-        _snake[j].ShowValue(vout);
-        _snake[j].ShowLeft(cdout);
-        _snake[j].ShowRight(cdout);
-        _snake[j].ShowPosition(pout);
-    }
-
-    eout << std::endl << std::endl;
-    vout << std::endl << std::endl;
-    cdout << std::endl << std::endl;
-    cout << std::endl << std::endl;
-    pout << std::endl << std::endl;
-
-    eout.close();
-    vout.close();
-    cdout.close();
-    cout.close();
-    pout.close();
+    COORD Actual_Pos;
+    Actual_Pos.X = New_Pos.X;
+    Actual_Pos.Y = New_Pos.Y;
+    return Actual_Pos;
 }
-

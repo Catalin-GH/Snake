@@ -23,12 +23,3 @@ bool operator!=(const COORD & c1, const COORD & c2)
         bval = TRUE;
     return bval;
 }
-
-void GetDesktopResolution(int& horizontal, int& vertical)
-{
-    RECT desktop;
-    const HWND hDesktop = GetDesktopWindow();
-    GetWindowRect(hDesktop, &desktop);
-    horizontal = desktop.right;
-    vertical = desktop.bottom;
-}

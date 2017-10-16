@@ -6,12 +6,11 @@ Food::Food()
     block.SetColor(COLOR_FOOD);
     block.SetFormat(FORMAT);
     block.SetValue(IS_FOOD);
-    _food.push_back(block);
+    _object.push_back(block);
 }
 
 void Food::SetPosition(COORD left, COORD right, COORD Position)
 {
-    _food[0].SetCoord(left, right);
-    _food[0].SetPosition(Position);
+    _object[0].SetCoord(left, right);
+    _object[0].SetPosition(Position);
 }
-

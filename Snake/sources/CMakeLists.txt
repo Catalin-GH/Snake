@@ -7,6 +7,7 @@ include_directories(
 	Functions
 	Food
 	Block
+	Object
 	)
 
 set(ConsoleFunc
@@ -49,6 +50,11 @@ set(Block
 	Block/Block.h
 	)
 	
+set(Object
+	Object/Object.cpp
+	Object/Object.h
+	)
+	
 set(Include_Dir
 	${ConsoleFunc}
 	${Game}
@@ -58,6 +64,7 @@ set(Include_Dir
 	${Food}
 	${Functions}
 	${Block}
+	${Object}
 	)	
 	
 set(Main
@@ -74,6 +81,7 @@ source_group ("Infos" FILES ${Infos})
 source_group ("Map" FILES ${Map})
 source_group ("Food" FILES ${Food})
 source_group ("Functions" FILES ${Functions})
+source_group ("Object" FILES ${Object})
 
 add_executable (Snake_Game ${Main})
 

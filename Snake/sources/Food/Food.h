@@ -1,20 +1,14 @@
 #pragma once
 
-#include <iostream>
-#include "Functions.h"
-#include "Console_Functions.h"
-#include "Block.h"
-#include <vector>
+#include "Object.h"
 
 extern size_t COLOR_FOOD;
 
-class Food
+class Food : public Object
 {
-private:
-    std::vector<Block> _food;
 public:
     Food();
     void SetPosition(COORD, COORD, COORD);
-    Block GetBlock() const { return _food[0]; }
-    std::vector<Block> GetFood() const { return _food; }
+    Block GetBlock() const { return _object[0]; }
+    std::vector<Block> GetFood() const { return _object; }
 };

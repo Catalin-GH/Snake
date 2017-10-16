@@ -3,11 +3,8 @@
 Game::Game(void)
 {
     ConsoleSettings();
-    OptionsName[0] = "START";
-    OptionsName[1] = "OPTIONS";
-    OptionsName[2] = "EXIT";
     int length = 20;
-    COORD OriginPosition = { (CONSOLE_HEIGHT - length) / 2 , (CONSOLE_LENGTH - length * 2) / 2 };
+    COORD OriginPosition = { (SHORT)(CONSOLE_HEIGHT - length) / 2 , (SHORT)(CONSOLE_LENGTH - length * 2) / 2 };
     _map = new Map(length, OriginPosition);
     _food = new Food();
     _gameInfos = new Infos();
@@ -21,30 +18,17 @@ Game::~Game(void)
     delete _gameInfos;
 }
 
-void Game::MainBlock(COORD Position, size_t Color, size_t iter)
-{
-    gotoxy(Position.X, Position.Y + iter * 2);
-    SetTextColor((WORD)Color);
-    std::cout << OptionsName[iter];
-}
-
-void Game::MainBlockInit(COORD Position)
-{
-    MainBlock(Position, COLOR_MAIN_SELECT, 0);
-    MainBlock(Position, COLOR_MAIN, 1);
-    MainBlock(Position, COLOR_MAIN, 2);
-}
-
 void Game::MainStart(void)
 {
-    COORD Position = { CONSOLE_LENGTH / 2 - OptionsName[0].size() , 15 };
+    /*place options in the center of the console*/
+    COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2 };
     Main(Position);
 }
 
 void Game::Main(COORD Position)
 {
     size_t select = 0;
-    MainBlockInit(Position);
+    _gameInfos->MainBlockInit(Position);
     bool bVal = FALSE;
     while (!bVal)
     {
@@ -55,9 +39,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select < 2)
             {
-                MainBlock(Position, COLOR_MAIN, previousSelected);
+                _gameInfos->MainElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                MainBlock(Position, COLOR_MAIN_SELECT, select);
+                _gameInfos->MainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -66,9 +50,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select > 0)
             {
-                MainBlock(Position, COLOR_MAIN, previousSelected);
+                _gameInfos->MainElement(Position, COLOR_MAIN, previousSelected);
                 --select;
-                MainBlock(Position, COLOR_MAIN_SELECT, select);
+                _gameInfos->MainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -82,7 +66,7 @@ void Game::Main(COORD Position)
                 SnakeGame();
                 cls();
                 select = 0;
-                MainBlockInit(Position);
+                _gameInfos->MainBlockInit(Position);
             }break;
             case SETTINGS:
             {
@@ -90,7 +74,7 @@ void Game::Main(COORD Position)
                 MainOptions();
                 cls();
                 select = 0;
-                MainBlockInit(Position);
+                _gameInfos->MainBlockInit(Position);
             }break;
             case EXIT:
             {
@@ -107,17 +91,13 @@ void Game::Main(COORD Position)
 
 void Game::MainOptions()
 {
-    /*Name the options*/
-    Options[0] = "<-    Map    ->";
-    Options[1] = "<-    Wall    ->";
-    Options[2] = "<-    Food    ->";
-    Options[3] = "<-    Snake   ->";
-    Options[4] = "<- Head snake ->";
-    Options[5] = "      Back      ";
+    /*place options in the center of the console*/
+    COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetOptions(0).size() / 2, CONSOLE_HEIGHT / 2 - 5 };
 
-    COORD PositionBlock = { CONSOLE_HEIGHT / 2 - 5, CONSOLE_LENGTH / 2 + 15 };
+    /*print options*/
+    _gameInfos->OptionsBlockInit(Position);
 
-    /* set-up block elements */
+    /*color preview in options*/
     size_t ColorValues[5];
     Block demoBlock[5];
     demoBlock[0].SetColor(COLOR_MAP);
@@ -127,33 +107,21 @@ void Game::MainOptions()
     demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
     for (size_t i = 0; i < 5; i++)
     {
-        COORD left = { PositionBlock.X + i * 2, PositionBlock.Y };
-        COORD right = { PositionBlock.X + i * 2, PositionBlock.Y + 1 };
+        COORD left = { (SHORT)(Position.Y + i * 2), Position.X + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
+        COORD right = { (SHORT)(Position.Y + i * 2), Position.X + 1 + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
         demoBlock[i].SetCoord(left, right);
         demoBlock[i].SetFormat(FORMAT);
 
         ColorValues[i] = demoBlock[i].GetColor();
     }
 
-    /* print blocks in console*/
+    /*print blocks*/
     for (size_t i = 0; i < 5; i++)
     {
         Block::PrintBlock(demoBlock[i], (WORD)demoBlock[i].GetColor());
     }
 
-    COORD Position = { CONSOLE_LENGTH / 2 - 10, CONSOLE_HEIGHT / 2 - 5 };
-
-    /*print opstions in console*/
-    gotoxy(Position.X, Position.Y);
-    SetTextColor(COLOR_MAIN_SELECT);
-    std::cout << Options[0];
-    for (size_t i = 1; i < 6; i++)
-    {
-        gotoxy(Position.X, Position.Y + i * 2);
-        SetTextColor(COLOR_MAIN);
-        std::cout << Options[i];
-    }
-
+    /*arrow is pressed*/
     size_t select = 0;
     size_t Color = demoBlock[select].GetColor();
     bool bVal = FALSE;
@@ -166,13 +134,9 @@ void Game::MainOptions()
             previousSelected = select;
             if (select < 5)
             {
-                gotoxy(Position.X, Position.Y + previousSelected * 2);
-                SetTextColor(COLOR_MAIN);
-                std::cout << Options[previousSelected];
+                _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                gotoxy(Position.X, Position.Y + select * 2);
-                SetTextColor(COLOR_MAIN_SELECT);
-                std::cout << Options[select];
+                _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
 
                 Color = demoBlock[select].GetColor();
             }
@@ -183,13 +147,9 @@ void Game::MainOptions()
             previousSelected = select;
             if (select > 0)
             {
-                gotoxy(Position.X, Position.Y + previousSelected * 2);
-                SetTextColor(COLOR_MAIN);
-                std::cout << Options[previousSelected];
+                _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
                 --select;
-                gotoxy(Position.X, Position.Y + select * 2);
-                SetTextColor(COLOR_MAIN_SELECT);
-                std::cout << Options[select];
+                _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
 
                 Color = demoBlock[select].GetColor();
             }
@@ -217,6 +177,7 @@ void Game::MainOptions()
         {
             bVal = TRUE;
         }
+
         switch (select)
         {
         case 0: COLOR_WALL = Color; break;

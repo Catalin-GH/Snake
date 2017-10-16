@@ -1,51 +1,24 @@
 #pragma once
 
-#include "Console_Functions.h"
-#include "Functions.h"
-#include "Block.h"
-#include <Windows.h>
-#include <iostream>
-#include <vector>
-#include <fstream>
+#include "Object.h"
 
 extern size_t COLOR_SNAKE;
 extern size_t COLOR_SNAKE_HEAD;
 
-class Snake
+class Snake : public Object
 {
-private:
-    std::vector<Block> _snake;
 public:
     Snake(const Block &);
-    inline std::vector<Block> GetSnake() const {return _snake;}
-    inline size_t GetLength() const {return _snake.size();}
-    inline Block GetBlockTemplate(COORD left, COORD right, COORD position)
-    {
-        Block block;
-        block.SetValue(FORMAT);
-        block.SetColor(COLOR_SNAKE);
-        block.SetFormat(IS_SNAKE);
-        block.SetLeft(left);
-        block.SetRight(right);
-        block.SetPosition(position);
-
-        return block;
-    }
-
+    inline std::vector<Block> GetSnake() const {return _object;}
+    inline size_t GetLength() const {return _object.size();}
+    void Build(const Block &);
+    Block GetBlockTemplate(COORD, COORD, COORD);
     bool HitBodyElement(void);
     void InsertBodyElement(const Block &);
     void UpdatePosition(COORD);
     COORD ArrowKeyPress();
 
-    void SeeInfos(void);
-
-    inline COORD operator=(const COORD & New_Pos)
-    {
-        COORD Actual_Pos;
-        Actual_Pos.X = New_Pos.X;
-        Actual_Pos.Y = New_Pos.Y;
-        return Actual_Pos;
-    }
+    COORD operator=(const COORD &);
     friend bool operator==(const COORD &, const COORD &);
     friend bool operator!=(const COORD &, const COORD &);
 };
