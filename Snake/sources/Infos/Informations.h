@@ -17,6 +17,7 @@ public:
     inline std::string GetOptions(size_t iter) const { return _options[iter]; }
     inline std::string GetMain(size_t iter) const { return _main[iter]; }
     inline size_t GetGainedPoints() const { return _gainedPoints; }
+    inline void ResetScore(void) { _gainedPoints = 0; }
     void PrintPointsInConsole(const COORD &);
     void GameOverMessage(const COORD &);
     void IncreasePoints();

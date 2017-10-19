@@ -24,7 +24,7 @@ void Infos::PrintPointsInConsole(const COORD & StartPointForWriting)
     SetTextColor(COLOR_INFO);
     std::cout << "Points: ";
     SetTextColor(COLOR_INFO_POINT);
-    std::cout << GetGainedPoints();
+    std::cout << std::to_string(_gainedPoints);
 }
 
 void Infos::GameOverMessage(const COORD & StartPointForWriting)

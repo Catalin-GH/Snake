@@ -7,6 +7,8 @@
 #include "Informations.h"
 #include "Functions.h"
 #include "Object.h"
+#include "Logo.h"
+#include <thread>
 
 #define SPEED 100
 #define START_GAME 0
@@ -20,7 +22,7 @@ private:
     Snake * _snake;
     Food * _food;
     Infos * _gameInfos;
-
+    std::thread t1;
 public:
     Game(void);
     ~Game(void);

@@ -20,8 +20,15 @@ Game::~Game(void)
 
 void Game::MainStart(void)
 {
+    AnimatedLogo Logo;
+    COORD Position = { 5, 15 };
+    Logo.InitLogo(Position);
+    Logo.printLogo();
+    t1 = std::thread(&AnimatedLogo::Animation, Logo);
+
+    Sleep(100);
     /*place options in the center of the console*/
-    COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2 };
+    Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2 };
     Main(Position);
 }
 
@@ -62,6 +69,7 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
+                t1.join();
                 cls();
                 SnakeGame();
                 cls();
@@ -70,7 +78,6 @@ void Game::Main(COORD Position)
             }break;
             case SETTINGS:
             {
-                cls();
                 MainOptions();
                 cls();
                 select = 0;
@@ -233,6 +240,7 @@ void Game::SnakeGame(void)
             {
                 _gameInfos->GameOverMessage(Position);
             }
+            _gameInfos->ResetScore();
             break;
         }
         Sleep(SPEED);
@@ -250,7 +258,7 @@ void Game::ConsoleSettings()
 
 void Game::MainExit()
 {
-
+    t1.join();
 }
 
 COORD Game::operator=(COORD NewPosition)

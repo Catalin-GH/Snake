@@ -8,7 +8,10 @@
 #include <utility>
 
 #define LOGO_COLS 24
-#define  LOGO_ROWS 6
+#define LOGO_ROWS 6
+
+extern size_t COLOR_MAP;
+extern size_t COLOR_WALL;
 
 class AnimatedLogo
 {
