@@ -14,9 +14,9 @@ void cls();
 void SetConsoleSize(int, int);
 void SetTextColor(WORD);
 void SetConsoleFontSize();
-void SetConsoleWindowSize(int, int);
+void SetConsoleWindowSize(SHORT, SHORT);
 COORD GetConsoleSize();
-void SetConsoleTitle(std::string);
+void ConsoleTitle(std::string);
 
 void DisableMaximizeButton();
 void DisableResize();

@@ -14,6 +14,7 @@
 #define START_GAME 0
 #define SETTINGS 1
 #define EXIT 2
+#define NTHREAD 1
 
 class Game
 {
@@ -22,7 +23,8 @@ private:
     Snake * _snake;
     Food * _food;
     Infos * _gameInfos;
-    std::thread t1;
+    AnimatedLogo Logo;
+    std::thread thread[NTHREAD];
 public:
     Game(void);
     ~Game(void);
@@ -32,6 +34,7 @@ public:
     void SnakeGame(void);
     void MainExit(void);
     void ConsoleSettings();
+    static bool StopCondition(bool Flag = FALSE) { return Flag; }
 
     COORD operator=(COORD);
 };

@@ -20,11 +20,10 @@ Game::~Game(void)
 
 void Game::MainStart(void)
 {
-    AnimatedLogo Logo;
     COORD Position = { 5, 15 };
     Logo.InitLogo(Position);
     Logo.printLogo();
-    t1 = std::thread(&AnimatedLogo::Animation, Logo);
+    thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
 
     Sleep(100);
     /*place options in the center of the console*/
@@ -36,8 +35,7 @@ void Game::Main(COORD Position)
 {
     size_t select = 0;
     _gameInfos->MainBlockInit(Position);
-    bool bVal = FALSE;
-    while (!bVal)
+    while (!Game::StopCondition())
     {
         Show_Cursor(FALSE);
         size_t previousSelected;
@@ -69,7 +67,8 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
-                t1.join();
+                Logo.SetCondition(TRUE);
+                thread[0].join();
                 cls();
                 SnakeGame();
                 cls();
@@ -87,8 +86,10 @@ void Game::Main(COORD Position)
             {
                 cls();
                 MainExit();
+                gotoxy(0,0);
+                std::cout << (int)Logo.GetCondition() << " ";
                 select = 0;
-                bVal = TRUE;
+                Game::StopCondition(TRUE);
             }break;
             }
         }
@@ -253,12 +254,15 @@ void Game::ConsoleSettings()
     SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
     DisableMaximizeButton();
     DisableResize();
-    SetConsoleTitle("Snake Game");
+    ConsoleTitle("Snake Game");
 }
 
 void Game::MainExit()
 {
-    t1.join();
+    Logo.SetCondition(TRUE);
+    gotoxy(0, 0);
+    std::cout << (int)Logo.GetCondition() << " ";
+    thread[0].join();
 }
 
 COORD Game::operator=(COORD NewPosition)

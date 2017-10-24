@@ -47,12 +47,12 @@ void SetConsoleFontSize()
     cfi.dwFontSize.Y = 20;
     cfi.FontFamily = FF_DONTCARE;
     //cfi.FontWeight = FW_NORMAL;
-    wcscpy(cfi.FaceName, L"Consolas");
+    wcscpy_s(cfi.FaceName, L"Consolas");
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 
 }
 
-void SetConsoleWindowSize(int x, int y)
+void SetConsoleWindowSize(SHORT x, SHORT y)
 {
     HWND console = GetConsoleWindow();
     RECT r;
@@ -124,9 +124,9 @@ COORD GetConsoleSize()
     return size;
 }
 
-void SetConsoleTitle(std::string Title)
+void ConsoleTitle(std::string Title)
 {
-    SetConsoleTitle(Title);
+    SetConsoleTitle("Snake Game");
 }
 
 void DisableMaximizeButton()
