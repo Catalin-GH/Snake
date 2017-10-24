@@ -14,8 +14,7 @@ Infos::Infos()
     _options[1] = "<-    Wall    ->";
     _options[2] = "<-    Food    ->";
     _options[3] = "<-    Snake   ->";
-    _options[4] = "<- Head snake ->";
-    _options[5] = "      Back      ";
+    _options[4] = "      Back      ";
 }
 
 void Infos::PrintPointsInConsole(const COORD & StartPointForWriting)
@@ -63,7 +62,7 @@ void Infos::MainBlockInit(COORD Position)
 void Infos::OptionsBlockInit(COORD Position)
 {
     OptionElement(Position, COLOR_MAIN_SELECT, 0);
-    for (size_t i = 1; i < 6; i++)
+    for (size_t i = 1; i < 5; i++)
     {
         OptionElement(Position, COLOR_MAIN, i);
     }

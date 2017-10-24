@@ -21,9 +21,10 @@ Game::~Game(void)
 void Game::MainStart(void)
 {
     COORD Position = { 5, 15 };
+/*
     Logo.InitLogo(Position);
     Logo.printLogo();
-    thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
+    thread[0] = std::thread(&AnimatedLogo::Animation, Logo);*/
 
     Sleep(100);
     /*place options in the center of the console*/
@@ -35,7 +36,8 @@ void Game::Main(COORD Position)
 {
     size_t select = 0;
     _gameInfos->MainBlockInit(Position);
-    while (!Game::StopCondition())
+    bool bVal = FALSE;
+    while (!bVal)
     {
         Show_Cursor(FALSE);
         size_t previousSelected;
@@ -67,8 +69,8 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
-                Logo.SetCondition(TRUE);
-                thread[0].join();
+                /*Logo.SetCondition(TRUE);
+                thread[0].join();*/
                 cls();
                 SnakeGame();
                 cls();
@@ -86,10 +88,8 @@ void Game::Main(COORD Position)
             {
                 cls();
                 MainExit();
-                gotoxy(0,0);
-                std::cout << (int)Logo.GetCondition() << " ";
                 select = 0;
-                Game::StopCondition(TRUE);
+                bVal = TRUE;
             }break;
             }
         }
@@ -106,14 +106,13 @@ void Game::MainOptions()
     _gameInfos->OptionsBlockInit(Position);
 
     /*color preview in options*/
-    size_t ColorValues[5];
-    Block demoBlock[5];
+    size_t ColorValues[4];
+    Block demoBlock[4];
     demoBlock[0].SetColor(COLOR_MAP);
     demoBlock[1].SetColor(COLOR_WALL);
     demoBlock[2].SetColor(COLOR_FOOD);
     demoBlock[3].SetColor(COLOR_SNAKE);
-    demoBlock[4].SetColor(COLOR_SNAKE_HEAD);
-    for (size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 4; i++)
     {
         COORD left = { (SHORT)(Position.Y + i * 2), Position.X + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
         COORD right = { (SHORT)(Position.Y + i * 2), Position.X + 1 + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
@@ -124,7 +123,7 @@ void Game::MainOptions()
     }
 
     /*print blocks*/
-    for (size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i <4; i++)
     {
         Block::PrintBlock(demoBlock[i], (WORD)demoBlock[i].GetColor());
     }
@@ -140,7 +139,7 @@ void Game::MainOptions()
         if (GetAsyncKeyState(VK_DOWN))
         {
             previousSelected = select;
-            if (select < 5)
+            if (select < 4)
             {
                 _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
@@ -181,7 +180,7 @@ void Game::MainOptions()
             }
             Sleep(100);
         }
-        if (GetAsyncKeyState(VK_RETURN) && select == 5)
+        if (GetAsyncKeyState(VK_RETURN) && select == 4)
         {
             bVal = TRUE;
         }
@@ -192,7 +191,6 @@ void Game::MainOptions()
         case 1: COLOR_MAP = Color; break;
         case 2: COLOR_FOOD = Color; break;
         case 3: COLOR_SNAKE = Color; break;
-        case 4: COLOR_SNAKE_HEAD = Color; break;
         }
         Sleep(200);
     }
@@ -259,10 +257,9 @@ void Game::ConsoleSettings()
 
 void Game::MainExit()
 {
+/*
     Logo.SetCondition(TRUE);
-    gotoxy(0, 0);
-    std::cout << (int)Logo.GetCondition() << " ";
-    thread[0].join();
+    thread[0].join();*/
 }
 
 COORD Game::operator=(COORD NewPosition)

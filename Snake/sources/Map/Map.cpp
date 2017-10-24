@@ -72,7 +72,7 @@ bool Map::UpdateObject(const std::vector<Block> & Object)
         {
             size_t x = Object[i].GetPosition().X;
             size_t y = Object[i].GetPosition().Y;
-            (_block[x][y]).SetColor((i == 0) ? COLOR_SNAKE_HEAD : COLOR_SNAKE);
+            (_block[x][y]).SetColor(COLOR_SNAKE);
             (_block[x][y]).SetValue(IS_SNAKE);
         }
     }

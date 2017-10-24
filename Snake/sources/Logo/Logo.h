@@ -5,7 +5,6 @@
 #include "Block.h"
 #include "Snake.h"
 #include "Food.h"
-#include <utility>
 
 #define LOGO_COLS 24
 #define LOGO_ROWS 6
@@ -25,7 +24,6 @@ private:
     bool _condition = FALSE;
 public:
     inline void SetCondition(bool Flag) { _condition = Flag; }
-    inline bool GetCondition() const { return _condition; }
     AnimatedLogo(void);
     void InitPath(void);
     void InitLogo(COORD);

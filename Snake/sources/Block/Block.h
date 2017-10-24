@@ -11,7 +11,7 @@ class Block
 private:
     size_t _format;      //ascii value
     size_t _value;     //clasification
-    size_t _color;
+    size_t * _color;
     COORD _left;
     COORD _right;
     COORD _position;
@@ -20,7 +20,7 @@ public:
 
     inline void SetFormat(size_t f) { _format = f; }
     inline void SetValue(size_t v) { _value = v; }
-    inline void SetColor(size_t c) { _color = c; }
+    inline void SetColor(size_t & c) { _color = &c; }
     inline void SetLeft(COORD l) { _left = l; }
     inline void SetRight(COORD r) { _right = r; }
     inline void SetCoord(COORD l, COORD r) { _left = l, _right = r; }
@@ -29,7 +29,7 @@ public:
     {
         _format = b.GetFormat();
         _value = b.GetValue();
-        _color = b.GetColor();
+        *_color = b.GetColor();
         _left = b.GetLeft();
         _right = b.GetRight();
         _position = b.GetPosition();
@@ -37,7 +37,7 @@ public:
 
     inline size_t GetFormat() const { return _format; }
     inline size_t GetValue() const { return _value; }
-    inline size_t GetColor() const { return _color; }
+    inline size_t GetColor() const { return *_color; }
     inline COORD GetLeft() const { return _left; }
     inline COORD GetRight() const { return _right; }
     inline COORD GetPosition() const { return _position; }
@@ -46,7 +46,7 @@ public:
         Block block;
         block.SetFormat(this->_format);
         block.SetValue(this->_value);
-        block.SetColor(this->_color);
+        block.SetColor(*_color);
         block.SetCoord(this->_left, this->_right);
         block.SetPosition(this->_position);
         return block;

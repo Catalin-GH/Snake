@@ -10,7 +10,7 @@ class Infos
 {
 private:
     std::string _main[3];
-    std::string _options[6];
+    std::string _options[5];
     size_t _gainedPoints;
 public:
     Infos();

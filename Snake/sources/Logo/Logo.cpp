@@ -44,24 +44,16 @@ void AnimatedLogo::InitLogo(COORD Position)
     {
         for (size_t j = 0; j < LOGO_COLS; j++)
         {
-            if (j == 5)
-            {
-                _logo[i][j].SetColor(COLOR_MAP);
-            }
-            else
-            {
-                _logo[i][j].SetColor(COLOR_WALL);
-            }
-
             if (Logo[i][j] > 0)
             {
-                COORD left = { Position.X + i, Position.Y + j * 2 };
-                COORD right = { Position.X + i, Position.Y + j * 2 + 1 };
-                COORD pos = { i, j };
+                COORD left = { SHORT(Position.X + i), SHORT(Position.Y + j * 2) };
+                COORD right = { SHORT(Position.X + i), SHORT(Position.Y + j * 2 + 1) };
+                COORD pos = { (SHORT)i, (SHORT)j };
                 _logo[i][j].SetFormat(FORMAT);
                 _logo[i][j].SetValue(Logo[i][j]);   // used for path
                 _logo[i][j].SetCoord(left, right);
                 _logo[i][j].SetPosition(pos);
+                _logo[i][j].SetColor(i == 5 ? COLOR_WALL : COLOR_MAP);
             }
         }
     }
@@ -71,10 +63,10 @@ void AnimatedLogo::InitLogo(COORD Position)
     {
         switch (i)
         {
-        case 0: _logoPart[i].SetValue(IS_FOOD); break;
-        case 1: _logoPart[i].SetValue(IS_MAP); break;
-        case 2: _logoPart[i].SetValue(IS_MAP); break;
-        default: _logoPart[i].SetValue(IS_SNAKE);
+        case 0: _logoPart[i].SetColor(COLOR_FOOD); _logoPart[i].SetValue(IS_FOOD); break;
+        case 1: _logoPart[i].SetColor(COLOR_MAP); _logoPart[i].SetValue(IS_MAP);  break;
+        case 2: _logoPart[i].SetColor(COLOR_MAP); _logoPart[i].SetValue(IS_MAP);  break;
+        default: _logoPart[i].SetColor(COLOR_SNAKE); _logoPart[i].SetValue(IS_SNAKE);
         }
         _logoPart[i].SetFormat(FORMAT);
     }
@@ -86,7 +78,8 @@ void AnimatedLogo::printLogo(void)
     {
         for (size_t j = 0; j < LOGO_COLS; j++)
         {
-            Block::PrintBlock(_logo[i][j], COLOR_LOGO);
+            if(_logo[i][j].GetValue())
+                Block::PrintBlock(_logo[i][j], (WORD)_logo[i][j].GetColor());
         }
     }
 }
@@ -95,7 +88,8 @@ void AnimatedLogo::Animation(void)
 {
     InitPath();
     bool bVal = FALSE;
-    while (!GetCondition())
+    bool * bbVal = &_condition;
+    while (!*bbVal)
     {
         for (size_t i = 0; i < _path.size(); i++)
         {
@@ -103,20 +97,13 @@ void AnimatedLogo::Animation(void)
             {
                 for (size_t j = 0; j <= i; j++)
                 {
-                    switch (j)
-                    {
-                    case 0: _logoPart[j].SetColor(COLOR_FOOD); break;
-                    case 1: _logoPart[j].SetColor(COLOR_MAP); break;
-                    case 2: _logoPart[j].SetColor(COLOR_MAP); break;
-                    default: _logoPart[j].SetColor(COLOR_SNAKE);
-                    }
 
                     /*print first LOGOPART_LENGHT blocks-*/
                     size_t x = _path[i - j].first;
                     size_t y = _path[i - j].second;
                     _logoPart[j].SetCoord(_logo[x][y].GetLeft(), _logo[x][y].GetRight());
                     _logoPart[j].SetPosition(_logo[x][y].GetPosition());
-                    Block::PrintBlock(_logoPart[j], _logoPart[j].GetColor());
+                    Block::PrintBlock(_logoPart[j], (WORD)_logoPart[j].GetColor());
                 }
 
                 /*print last LOGOPART_LENGHT blocks*/
@@ -125,50 +112,33 @@ void AnimatedLogo::Animation(void)
                     size_t j = LOGOPART_LENGHT - 1;
                     for (; j > i; j--)
                     {
-                        switch (j)
-                        {
-                        case 0: _logoPart[j].SetColor(COLOR_FOOD); break;
-                        case 1: _logoPart[j].SetColor(COLOR_MAP); break;
-                        case 2: _logoPart[j].SetColor(COLOR_MAP); break;
-                        default: _logoPart[j].SetColor(COLOR_SNAKE);
-                        }
-
                         size_t x = _path[_path.size() + i - j].first;
                         size_t y = _path[_path.size() + i - j].second;
                         _logoPart[j].SetCoord(_logo[x][y].GetLeft(), _logo[x][y].GetRight());
                         _logoPart[j].SetPosition(_logo[x][y].GetPosition());
-                        Block::PrintBlock(_logoPart[j], _logoPart[j].GetColor());
+                        Block::PrintBlock(_logoPart[j], (WORD)_logoPart[j].GetColor());
                     }
                     size_t x = _path[_path.size() + i - LOGOPART_LENGHT].first;
                     size_t y = _path[_path.size() + i - LOGOPART_LENGHT].second;
-                    Block::PrintBlock(_logo[x][y], _logo[x][y].GetColor());
+                    Block::PrintBlock(_logo[x][y], (WORD)_logo[x][y].GetColor());
                 }
             }
-            else
+            else /*print the left blocks*/
             {
                 bVal = TRUE;
                 size_t j = 0;
                 for (; j < LOGOPART_LENGHT; j++)
                 {
-                    switch (j)
-                    {
-                    case 0: _logoPart[j].SetColor(COLOR_FOOD); break;
-                    case 1: _logoPart[j].SetColor(COLOR_MAP); break;
-                    case 2: _logoPart[j].SetColor(COLOR_MAP); break;
-                    default: _logoPart[j].SetColor(COLOR_SNAKE);
-                    }
-
                     size_t x = _path[i - j].first;
                     size_t y = _path[i - j].second;
                     _logoPart[j].SetCoord(_logo[x][y].GetLeft(), _logo[x][y].GetRight());
                     _logoPart[j].SetPosition(_logo[x][y].GetPosition());
-                    Block::PrintBlock(_logoPart[j], _logoPart[j].GetColor());
+                    Block::PrintBlock(_logoPart[j], (WORD)_logoPart[j].GetColor());
                 }
                 size_t x = _path[i - j].first;
                 size_t y = _path[i - j].second;
-                Block::PrintBlock(_logo[x][y], _logo[x][y].GetColor());
+                Block::PrintBlock(_logo[x][y], (WORD)_logo[x][y].GetColor());
             }
-
             Sleep(200);
         }
     }

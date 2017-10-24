@@ -2,7 +2,9 @@
 
 Block::Block()
 {
-    _format = _color = _format = 0;
+    _format = 0;
+    _value = 0;
+    _color = nullptr;
     _left.X = _left.Y = 0;
     _right.X = _right.Y = 0;
 }
@@ -21,7 +23,7 @@ void Block::ShowValue(std::ostream& stream)
 
 void Block::ShowColor(std::ostream& stream)
 {
-    stream << (int)_color << " ";
+    stream << (int)*_color << " ";
     return;
 }
 
@@ -60,7 +62,7 @@ void Block::PrintBlock(const Block & Block, WORD Color)
 bool Block::operator==(const Block & b1)
 {
     bool bVal = FALSE;
-    if (b1.GetValue() != _value && b1.GetColor() != _color && b1.GetPosition() != _position && b1.GetLeft() != _left && b1.GetRight() != _right)
+    if (b1.GetValue() != _value && b1.GetColor() != *_color && b1.GetPosition() != _position && b1.GetLeft() != _left && b1.GetRight() != _right)
         bVal = TRUE;
     return bVal;
 }

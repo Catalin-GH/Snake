@@ -18,7 +18,7 @@ void Snake::Build(const Block & StartPosition)
         block.SetLeft(left);
         block.SetRight(right);
         block.SetPosition(position);
-        block.SetColor((i == 0) ? COLOR_SNAKE_HEAD : COLOR_SNAKE);
+        block.SetColor(COLOR_SNAKE);
         _object.push_back(block);
     }
 }

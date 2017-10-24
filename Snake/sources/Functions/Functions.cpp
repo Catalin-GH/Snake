@@ -2,9 +2,8 @@
 
 size_t COLOR_WALL = 5;
 size_t COLOR_MAP = 8;
-size_t COLOR_FOOD = 11;
+size_t COLOR_FOOD = 4;
 size_t COLOR_SNAKE = 9;
-size_t COLOR_SNAKE_HEAD = 3;
 
 bool operator==(const COORD & left, const COORD & right)
 {

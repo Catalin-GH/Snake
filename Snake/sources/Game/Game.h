@@ -34,7 +34,6 @@ public:
     void SnakeGame(void);
     void MainExit(void);
     void ConsoleSettings();
-    static bool StopCondition(bool Flag = FALSE) { return Flag; }
 
     COORD operator=(COORD);
 };
