@@ -97,7 +97,6 @@ void AnimatedLogo::Animation(void)
             {
                 for (size_t j = 0; j <= i; j++)
                 {
-
                     /*print first LOGOPART_LENGHT blocks-*/
                     size_t x = _path[i - j].first;
                     size_t y = _path[i - j].second;
@@ -116,7 +115,7 @@ void AnimatedLogo::Animation(void)
                         size_t y = _path[_path.size() + i - j].second;
                         _logoPart[j].SetCoord(_logo[x][y].GetLeft(), _logo[x][y].GetRight());
                         _logoPart[j].SetPosition(_logo[x][y].GetPosition());
-                        Block::PrintBlock(_logoPart[j], (WORD)_logoPart[j].GetColor());
+                        Block::PrintBlock(_logoPart[j], (j == 1 || j == 2) ? (WORD)_logo[x][y].GetColor() : (WORD)_logoPart[j].GetColor());
                     }
                     size_t x = _path[_path.size() + i - LOGOPART_LENGHT].first;
                     size_t y = _path[_path.size() + i - LOGOPART_LENGHT].second;
@@ -133,7 +132,7 @@ void AnimatedLogo::Animation(void)
                     size_t y = _path[i - j].second;
                     _logoPart[j].SetCoord(_logo[x][y].GetLeft(), _logo[x][y].GetRight());
                     _logoPart[j].SetPosition(_logo[x][y].GetPosition());
-                    Block::PrintBlock(_logoPart[j], (WORD)_logoPart[j].GetColor());
+                    Block::PrintBlock(_logoPart[j], (j == 1 || j == 2) ? (WORD)_logo[x][y].GetColor() : (WORD)_logoPart[j].GetColor());
                 }
                 size_t x = _path[i - j].first;
                 size_t y = _path[i - j].second;

@@ -21,10 +21,10 @@ Game::~Game(void)
 void Game::MainStart(void)
 {
     COORD Position = { 5, 15 };
-/*
+
     Logo.InitLogo(Position);
     Logo.printLogo();
-    thread[0] = std::thread(&AnimatedLogo::Animation, Logo);*/
+    thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
 
     Sleep(100);
     /*place options in the center of the console*/
@@ -69,8 +69,8 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
-                /*Logo.SetCondition(TRUE);
-                thread[0].join();*/
+                Logo.SetCondition(TRUE);
+                thread[0].join();
                 cls();
                 SnakeGame();
                 cls();
@@ -81,6 +81,7 @@ void Game::Main(COORD Position)
             {
                 MainOptions();
                 cls();
+                Logo.printLogo();
                 select = 0;
                 _gameInfos->MainBlockInit(Position);
             }break;
@@ -97,7 +98,7 @@ void Game::Main(COORD Position)
     }
 }
 
-void Game::MainOptions()
+void Game::MainOptions(void)
 {
     /*place options in the center of the console*/
     COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetOptions(0).size() / 2, CONSOLE_HEIGHT / 2 - 5 };
@@ -105,32 +106,9 @@ void Game::MainOptions()
     /*print options*/
     _gameInfos->OptionsBlockInit(Position);
 
-    /*color preview in options*/
-    size_t ColorValues[4];
-    Block demoBlock[4];
-    demoBlock[0].SetColor(COLOR_MAP);
-    demoBlock[1].SetColor(COLOR_WALL);
-    demoBlock[2].SetColor(COLOR_FOOD);
-    demoBlock[3].SetColor(COLOR_SNAKE);
-    for (size_t i = 0; i < 4; i++)
-    {
-        COORD left = { (SHORT)(Position.Y + i * 2), Position.X + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
-        COORD right = { (SHORT)(Position.Y + i * 2), Position.X + 1 + (SHORT)_gameInfos->GetOptions(0).size() + 5 };
-        demoBlock[i].SetCoord(left, right);
-        demoBlock[i].SetFormat(FORMAT);
-
-        ColorValues[i] = demoBlock[i].GetColor();
-    }
-
-    /*print blocks*/
-    for (size_t i = 0; i <4; i++)
-    {
-        Block::PrintBlock(demoBlock[i], (WORD)demoBlock[i].GetColor());
-    }
-
     /*arrow is pressed*/
     size_t select = 0;
-    size_t Color = demoBlock[select].GetColor();
+    size_t Colors[4] = { COLOR_MAP, COLOR_WALL, COLOR_FOOD, COLOR_SNAKE };
     bool bVal = FALSE;
     while (!bVal)
     {
@@ -144,8 +122,6 @@ void Game::MainOptions()
                 _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
                 _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
-
-                Color = demoBlock[select].GetColor();
             }
             Sleep(100);
         }
@@ -157,43 +133,91 @@ void Game::MainOptions()
                 _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
                 --select;
                 _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
-
-                Color = demoBlock[select].GetColor();
             }
             Sleep(100);
         }
         else if (GetAsyncKeyState(VK_LEFT))
         {
-            if (Color > 0)
+            if (Colors[select] > 0)
             {
-                --Color;
-                Block::PrintBlock(demoBlock[select], (WORD)Color);
+                bool findSameColor = FALSE;
+                --Colors[select];
+                for (size_t i = 0; i < 4 && i != select; i++)
+                {
+                    if (Colors[select] > 0 && Colors[select] == Colors[i])
+                    {
+                        findSameColor = TRUE;
+                        i = 0;
+                        if (--Colors[select] == 0)
+                        {
+                            switch (select)
+                            {
+                            case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                            case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                            case 2: COLOR_FOOD = Colors[2]; break;
+                            case 3: COLOR_SNAKE = Colors[3];
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!findSameColor)
+                {
+                    switch (select)
+                    {
+                    case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                    case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                    case 2: COLOR_FOOD = Colors[2]; break;
+                    case 3: COLOR_SNAKE = Colors[3]; break;
+                    }
+                }
             }
             Sleep(100);
         }
         else if (GetAsyncKeyState(VK_RIGHT))
         {
-            if (Color < 15)
+            if (Colors[select] < 15)
             {
-                ++Color;
-                Block::PrintBlock(demoBlock[select], (WORD)Color);
+                bool findSameColor = FALSE;
+                ++Colors[select];
+                for (size_t i = 0; i < 4 && i != select; i++)
+                {
+                    if (Colors[select] < 15 && Colors[select] == Colors[i])
+                    {
+                        findSameColor = TRUE;
+                        i = 0;
+                        if (++Colors[select] == 15)
+                        {
+                            switch (select)
+                            {
+                            case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                            case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                            case 2: COLOR_FOOD = Colors[2]; break;
+                            case 3: COLOR_SNAKE = Colors[3];
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!findSameColor)
+                {
+                    switch (select)
+                    {
+                    case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                    case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                    case 2: COLOR_FOOD = Colors[2]; break;
+                    case 3: COLOR_SNAKE = Colors[3]; break;
+                    }
+                }
             }
-            Sleep(100);
         }
-        if (GetAsyncKeyState(VK_RETURN) && select == 4)
-        {
-            bVal = TRUE;
-        }
-
-        switch (select)
-        {
-        case 0: COLOR_WALL = Color; break;
-        case 1: COLOR_MAP = Color; break;
-        case 2: COLOR_FOOD = Color; break;
-        case 3: COLOR_SNAKE = Color; break;
-        }
-        Sleep(200);
+        Sleep(100);
     }
+    if (GetAsyncKeyState(VK_RETURN) && select == 4)
+    {
+        bVal = TRUE;
+    }
+    Sleep(100);
 }
 
 void Game::SnakeGame(void)
@@ -257,9 +281,8 @@ void Game::ConsoleSettings()
 
 void Game::MainExit()
 {
-/*
     Logo.SetCondition(TRUE);
-    thread[0].join();*/
+    thread[0].join();
 }
 
 COORD Game::operator=(COORD NewPosition)
