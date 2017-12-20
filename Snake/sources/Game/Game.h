@@ -9,6 +9,7 @@
 #include "Object.h"
 #include "Logo.h"
 #include <thread>
+#include <algorithm>
 
 #define SPEED 100
 #define START_GAME 0

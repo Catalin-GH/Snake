@@ -13,5 +13,7 @@ protected:
     std::vector<Block> _object;
 
 public:
+    Object() {}
     void SeeInfos(uint8_t);
+    virtual ~Object() {}
 };

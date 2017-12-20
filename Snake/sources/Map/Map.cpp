@@ -14,6 +14,7 @@ Map::Map(size_t length, COORD OriginPosition)
 
 Map::~Map()
 {
+    //release memory
     for (size_t i = 0; i < _rows; i++)
     {
         delete[] _block[i];

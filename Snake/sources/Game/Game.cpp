@@ -8,10 +8,12 @@ Game::Game(void)
     _map = new Map(length, OriginPosition);
     _food = new Food();
     _gameInfos = new Infos();
+    Logo.InitialSetup();
 }
 
 Game::~Game(void)
 {
+    Logo.ReleaseMemoryLogoMatrix();
     delete _map;
     delete _snake;
     delete _food;
@@ -22,11 +24,12 @@ void Game::MainStart(void)
 {
     COORD Position = { 5, 15 };
 
+    Logo.AllocateMemory();
+    Sleep(50);
     Logo.InitLogo(Position);
     Logo.printLogo();
     thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
 
-    Sleep(100);
     /*place options in the center of the console*/
     Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2 };
     Main(Position);
@@ -69,11 +72,24 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
-                Logo.SetCondition(TRUE);
-                thread[0].join();
+                Logo.SetStopAnimation(TRUE);
+                while (Logo.VerifyAnimation()) {}
+                thread[0].detach();
+                Logo.ReleaseMemory();
+                Sleep(50);
                 cls();
+
                 SnakeGame();
                 cls();
+                Logo.SetStopAnimation(FALSE);
+
+                COORD PositionLogo = { 5, 15 };
+                Logo.AllocateMemory();
+                Sleep(50);
+                Logo.InitLogo(PositionLogo);
+                Logo.printLogo();
+                thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
+
                 select = 0;
                 _gameInfos->MainBlockInit(Position);
             }break;
@@ -108,7 +124,7 @@ void Game::MainOptions(void)
 
     /*arrow is pressed*/
     size_t select = 0;
-    size_t Colors[4] = { COLOR_MAP, COLOR_WALL, COLOR_FOOD, COLOR_SNAKE };
+    std::vector<size_t> Colors = { COLOR_MAP, COLOR_WALL, COLOR_FOOD, COLOR_SNAKE };
     bool bVal = FALSE;
     while (!bVal)
     {
@@ -140,36 +156,30 @@ void Game::MainOptions(void)
         {
             if (Colors[select] > 0)
             {
-                bool findSameColor = FALSE;
-                --Colors[select];
-                for (size_t i = 0; i < 4 && i != select; i++)
+                size_t Color = Colors[select];
+                do
                 {
-                    if (Colors[select] > 0 && Colors[select] == Colors[i])
+                    --Color;
+                    bool bVal = FALSE;
+                    for (size_t i = 0; i < 4; i++)
                     {
-                        findSameColor = TRUE;
-                        i = 0;
-                        if (--Colors[select] == 0)
+                        if (Color == Colors[i])
                         {
-                            switch (select)
-                            {
-                            case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                            case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                            case 2: COLOR_FOOD = Colors[2]; break;
-                            case 3: COLOR_SNAKE = Colors[3];
-                            }
-                            break;
+                            bVal = TRUE;
                         }
                     }
-                }
-                if (!findSameColor)
-                {
-                    switch (select)
+                    if (!bVal)
                     {
-                    case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                    case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                    case 2: COLOR_FOOD = Colors[2]; break;
-                    case 3: COLOR_SNAKE = Colors[3]; break;
+                        Colors[select] = Color;
+                        break;
                     }
+                } while (Color > 0);
+                switch (select)
+                {
+                case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                case 2: COLOR_FOOD = Colors[2]; break;
+                case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
             Sleep(100);
@@ -178,46 +188,40 @@ void Game::MainOptions(void)
         {
             if (Colors[select] < 15)
             {
-                bool findSameColor = FALSE;
-                ++Colors[select];
-                for (size_t i = 0; i < 4 && i != select; i++)
+                size_t Color = Colors[select];
+                do
                 {
-                    if (Colors[select] < 15 && Colors[select] == Colors[i])
+                    ++Color;
+                    bool bVal = FALSE;
+                    for (size_t i = 0; i < 4; i++)
                     {
-                        findSameColor = TRUE;
-                        i = 0;
-                        if (++Colors[select] == 15)
+                        if (Color == Colors[i])
                         {
-                            switch (select)
-                            {
-                            case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                            case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                            case 2: COLOR_FOOD = Colors[2]; break;
-                            case 3: COLOR_SNAKE = Colors[3];
-                            }
-                            break;
+                            bVal = TRUE;
                         }
                     }
-                }
-                if (!findSameColor)
-                {
-                    switch (select)
+                    if (!bVal)
                     {
-                    case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                    case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                    case 2: COLOR_FOOD = Colors[2]; break;
-                    case 3: COLOR_SNAKE = Colors[3]; break;
+                        Colors[select] = Color;
+                        break;
                     }
+                } while (Color < 15);
+                switch (select)
+                {
+                case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
+                case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
+                case 2: COLOR_FOOD = Colors[2]; break;
+                case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
+            Sleep(100);
+        }
+        else if (GetAsyncKeyState(VK_RETURN) && select == 4)
+        {
+            bVal = TRUE;
         }
         Sleep(100);
     }
-    if (GetAsyncKeyState(VK_RETURN) && select == 4)
-    {
-        bVal = TRUE;
-    }
-    Sleep(100);
 }
 
 void Game::SnakeGame(void)
@@ -281,8 +285,10 @@ void Game::ConsoleSettings()
 
 void Game::MainExit()
 {
-    Logo.SetCondition(TRUE);
-    thread[0].join();
+    Logo.SetStopAnimation(TRUE);
+    while (Logo.VerifyAnimation()) {}
+    thread[0].detach();
+    Logo.ReleaseMemory();
 }
 
 COORD Game::operator=(COORD NewPosition)

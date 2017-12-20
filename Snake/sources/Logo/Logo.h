@@ -18,13 +18,22 @@ extern size_t COLOR_SNAKE;
 class AnimatedLogo
 {
 private:
-    Block _logo[LOGO_ROWS][LOGO_COLS];
-    Block _logoPart[LOGOPART_LENGHT];
-    std::vector<std::pair<size_t, size_t>> _path;
-    bool _condition = FALSE;
+    Block ** _logo;                 //entire logo properties
+    Block  * _logo_part;             //just snake and food properties
+    size_t ** _logo_matrix;         //used for path, letters and the line in the footer of the logo
+    std::pair<size_t, size_t> _path[52];
+    static bool _stop_animation;
+    static bool _animation_stopped;
 public:
-    inline void SetCondition(bool Flag) { _condition = Flag; }
-    AnimatedLogo(void);
+    inline void SetStopAnimation(bool value) { _stop_animation = value; }
+    inline bool StopAnimation() { return _stop_animation; }
+    inline bool VerifyAnimation() { return _animation_stopped; }
+    void InitialSetup(void);
+    void InitLogoMatrix(void);
+    void AllocateMemoryLogoMatrix(void);
+    void ReleaseMemoryLogoMatrix(void);
+    void AllocateMemory(void);
+    void ReleaseMemory(void);
     void InitPath(void);
     void InitLogo(COORD);
     void printLogo(void);
