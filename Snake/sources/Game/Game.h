@@ -21,9 +21,9 @@ class Game
 {
 private:
     Map * _map;
-    Snake * _snake;
+    Snake _snake;
     Food * _food;
-    Infos * _gameInfos;
+    Info * _gameInfo;
     AnimatedLogo Logo;
     std::thread thread[NTHREAD];
 public:

@@ -7,7 +7,7 @@ Game::Game(void)
     COORD OriginPosition = { (SHORT)(CONSOLE_HEIGHT - length) / 2 , (SHORT)(CONSOLE_LENGTH - length * 2) / 2 };
     _map = new Map(length, OriginPosition);
     _food = new Food();
-    _gameInfos = new Infos();
+    _gameInfo = new Info();
     Logo.InitialSetup();
 }
 
@@ -15,9 +15,8 @@ Game::~Game(void)
 {
     Logo.ReleaseMemoryLogoMatrix();
     delete _map;
-    delete _snake;
     delete _food;
-    delete _gameInfos;
+    delete _gameInfo;
 }
 
 void Game::MainStart(void)
@@ -31,14 +30,14 @@ void Game::MainStart(void)
     thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
 
     /*place options in the center of the console*/
-    Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfos->GetMain(0).size() / 2 };
+    Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfo->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfo->GetMain(0).size() / 2 };
     Main(Position);
 }
 
 void Game::Main(COORD Position)
 {
     size_t select = 0;
-    _gameInfos->MainBlockInit(Position);
+    _gameInfo->MainBlockInit(Position);
     bool bVal = FALSE;
     while (!bVal)
     {
@@ -49,9 +48,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select < 2)
             {
-                _gameInfos->MainElement(Position, COLOR_MAIN, previousSelected);
+                _gameInfo->MainElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                _gameInfos->MainElement(Position, COLOR_MAIN_SELECT, select);
+                _gameInfo->MainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -60,9 +59,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select > 0)
             {
-                _gameInfos->MainElement(Position, COLOR_MAIN, previousSelected);
+                _gameInfo->MainElement(Position, COLOR_MAIN, previousSelected);
                 --select;
-                _gameInfos->MainElement(Position, COLOR_MAIN_SELECT, select);
+                _gameInfo->MainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -91,7 +90,7 @@ void Game::Main(COORD Position)
                 thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
 
                 select = 0;
-                _gameInfos->MainBlockInit(Position);
+                _gameInfo->MainBlockInit(Position);
             }break;
             case SETTINGS:
             {
@@ -99,7 +98,7 @@ void Game::Main(COORD Position)
                 cls();
                 Logo.printLogo();
                 select = 0;
-                _gameInfos->MainBlockInit(Position);
+                _gameInfo->MainBlockInit(Position);
             }break;
             case EXIT:
             {
@@ -117,10 +116,10 @@ void Game::Main(COORD Position)
 void Game::MainOptions(void)
 {
     /*place options in the center of the console*/
-    COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfos->GetOptions(0).size() / 2, CONSOLE_HEIGHT / 2 - 5 };
+    COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfo->GetOptions(0).size() / 2, CONSOLE_HEIGHT / 2 - 5 };
 
     /*print options*/
-    _gameInfos->OptionsBlockInit(Position);
+    _gameInfo->OptionsBlockInit(Position);
 
     /*arrow is pressed*/
     size_t select = 0;
@@ -135,22 +134,22 @@ void Game::MainOptions(void)
             previousSelected = select;
             if (select < 4)
             {
-                _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
+                _gameInfo->OptionElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
+                _gameInfo->OptionElement(Position, COLOR_MAIN_SELECT, select);
             }
-            Sleep(100);
+            Sleep(300);
         }
         else if (GetAsyncKeyState(VK_UP))
         {
             previousSelected = select;
             if (select > 0)
             {
-                _gameInfos->OptionElement(Position, COLOR_MAIN, previousSelected);
+                _gameInfo->OptionElement(Position, COLOR_MAIN, previousSelected);
                 --select;
-                _gameInfos->OptionElement(Position, COLOR_MAIN_SELECT, select);
+                _gameInfo->OptionElement(Position, COLOR_MAIN_SELECT, select);
             }
-            Sleep(100);
+            Sleep(300);
         }
         else if (GetAsyncKeyState(VK_LEFT))
         {
@@ -182,7 +181,7 @@ void Game::MainOptions(void)
                 case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
-            Sleep(100);
+            Sleep(500);
         }
         else if (GetAsyncKeyState(VK_RIGHT))
         {
@@ -214,7 +213,7 @@ void Game::MainOptions(void)
                 case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
-            Sleep(100);
+            Sleep(500);
         }
         else if (GetAsyncKeyState(VK_RETURN) && select == 4)
         {
@@ -229,30 +228,29 @@ void Game::SnakeGame(void)
     _map->Build();
     _map->PrintGraphic();
     COORD Position = { 2, 3 };
-    _gameInfos->PrintPointsInConsole(Position);
+    _gameInfo->PrintPointsInConsole(Position);
     COORD RandPoint = _map->RandomPosition();
     _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
-    _snake = new Snake(_map->GetCenterBlock());
-    _map->UpdateObject(_snake->GetSnake());
-    _map->PrintGraphicObject(_snake->GetSnake());
+    _snake = Snake(_map->GetCenterBlock());
+    _map->UpdateObject(_snake.GetSnake());
+    _map->PrintGraphicObject(_snake.GetSnake());
     _map->UpdateObject(_food->GetFood());
     _map->PrintGraphicObject(_food->GetFood());
     bool bVal = FALSE;
     while (TRUE)
     {
-        _map->DeleteGraphicObject(_snake->GetSnake());
-        _map->PrintGraphicObject(_snake->GetSnake());
-        _snake->UpdatePosition(_snake->ArrowKeyPress());
-        if (_map->UpdateObject(_snake->GetSnake()) && !_snake->HitBodyElement())
+        _map->DeleteGraphicObject(_snake.GetSnake());
+        _map->PrintGraphicObject(_snake.GetSnake());
+        _snake.UpdatePosition(_snake.ArrowKeyPress());
+        if (_map->UpdateObject(_snake.GetSnake()) && !_snake.HitBodyElement())
         {
-            _map->PrintGraphicObject(_snake->GetSnake());
-            if (_snake->GetSnake()[0].GetPosition() == _food->GetBlock().GetPosition())
+            _map->PrintGraphicObject(_snake.GetSnake());
+            if (_snake.GetSnake()[0].GetPosition() == _food->GetBlock().GetPosition())
             {
                 COORD Position = { 2, 3 };
-                _gameInfos->IncreasePoints();
-                _gameInfos->PrintPointsInConsole(Position);
-
-                _snake->InsertBodyElement(_snake->GetBlockTemplate(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
+                _gameInfo->IncreasePoints();
+                _gameInfo->PrintPointsInConsole(Position);
+                _snake.InsertBodyElement(_snake.GetBlockTemplate(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
                 COORD RandPoint = _map->RandomPosition();
                 _map->DeleteGraphicObject(_food->GetFood());
                 _food->SetPosition(_map->GetBlock(RandPoint.X, RandPoint.Y).GetLeft(), _map->GetBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
@@ -265,9 +263,9 @@ void Game::SnakeGame(void)
             COORD Position = { CONSOLE_LENGTH / 2 - 8, 3 };
             while (!GetAsyncKeyState(VK_RETURN))
             {
-                _gameInfos->GameOverMessage(Position);
+                _gameInfo->GameOverMessage(Position);
             }
-            _gameInfos->ResetScore();
+            _gameInfo->ResetScore();
             break;
         }
         Sleep(SPEED);

@@ -6,14 +6,14 @@
 #include "Console_Functions.h"
 #include "Functions.h"
 
-class Infos
+class Info
 {
 private:
     std::string _main[3];
     std::string _options[5];
     size_t _gainedPoints;
 public:
-    Infos();
+    Info();
     inline std::string GetOptions(size_t iter) const { return _options[iter]; }
     inline std::string GetMain(size_t iter) const { return _main[iter]; }
     inline size_t GetGainedPoints() const { return _gainedPoints; }

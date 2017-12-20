@@ -1,6 +1,6 @@
 #include "Informations.h"
 
-Infos::Infos()
+Info::Info()
 {
     _gainedPoints = 0;
 
@@ -17,7 +17,7 @@ Infos::Infos()
     _options[4] = "      Back      ";
 }
 
-void Infos::PrintPointsInConsole(const COORD & StartPointForWriting)
+void Info::PrintPointsInConsole(const COORD & StartPointForWriting)
 {
     gotoxy(StartPointForWriting.X, StartPointForWriting.Y);
     SetTextColor(COLOR_INFO);
@@ -26,40 +26,40 @@ void Infos::PrintPointsInConsole(const COORD & StartPointForWriting)
     std::cout << std::to_string(_gainedPoints);
 }
 
-void Infos::GameOverMessage(const COORD & StartPointForWriting)
+void Info::GameOverMessage(const COORD & StartPointForWriting)
 {
     gotoxy(StartPointForWriting.X, StartPointForWriting.Y);
     SetTextColor(COLOR_GAME_OVER);
     std::cout << "The game is over!";
 }
 
-void Infos::IncreasePoints()
+void Info::IncreasePoints()
 {
     ++_gainedPoints;
 }
 
-void Infos::MainElement(COORD Position, size_t Color, size_t iter)
+void Info::MainElement(COORD Position, size_t Color, size_t iter)
 {
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
     std::cout << _main[iter];
 }
 
-void Infos::OptionElement(COORD Position, size_t Color, size_t iter)
+void Info::OptionElement(COORD Position, size_t Color, size_t iter)
 {
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
     std::cout << _options[iter];
 }
 
-void Infos::MainBlockInit(COORD Position)
+void Info::MainBlockInit(COORD Position)
 {
     MainElement(Position, COLOR_MAIN_SELECT, 0);
     MainElement(Position, COLOR_MAIN, 1);
     MainElement(Position, COLOR_MAIN, 2);
 }
 
-void Infos::OptionsBlockInit(COORD Position)
+void Info::OptionsBlockInit(COORD Position)
 {
     OptionElement(Position, COLOR_MAIN_SELECT, 0);
     for (size_t i = 1; i < 5; i++)
