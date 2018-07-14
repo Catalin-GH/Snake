@@ -52,11 +52,13 @@ void Block::PrintBlock(const Block & Block, WORD Color)
     size_t rx = Block.GetRight().X;
     size_t ry = Block.GetRight().Y;
     gotoxy(ly, lx);             //(col, row)
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
+    SetConsoleTextAttribute(console, Color);
     std::cout << ((char)Block.GetFormat());
+    std::cout.clear();
     gotoxy(ry, rx);             //(col, row)
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
+    SetConsoleTextAttribute(console, Color);
     std::cout << ((char)Block.GetFormat());
+    std::cout.clear();
 }
 
 bool Block::operator==(const Block & b1)

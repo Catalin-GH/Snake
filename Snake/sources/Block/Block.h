@@ -6,6 +6,8 @@
 #include <iostream>
 #include "Console_Functions.h"
 
+extern HANDLE console;
+
 class Block
 {
 private:

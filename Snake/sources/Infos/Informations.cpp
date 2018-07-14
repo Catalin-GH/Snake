@@ -43,6 +43,7 @@ void Info::MainElement(COORD Position, size_t Color, size_t iter)
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
     std::cout << _main[iter];
+    Sleep(20);
 }
 
 void Info::OptionElement(COORD Position, size_t Color, size_t iter)
@@ -50,6 +51,7 @@ void Info::OptionElement(COORD Position, size_t Color, size_t iter)
     gotoxy(Position.X, Position.Y + iter * 2);
     SetTextColor((WORD)Color);
     std::cout << _options[iter];
+    Sleep(20);
 }
 
 void Info::MainBlockInit(COORD Position)

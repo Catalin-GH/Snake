@@ -19,7 +19,7 @@ class AnimatedLogo
 {
 private:
     Block ** _logo;                 //entire logo properties
-    Block  * _logo_part;             //just snake and food properties
+    Block  * _logo_part;            //just snake and food properties
     size_t ** _logo_matrix;         //used for path, letters and the line in the footer of the logo
     std::pair<size_t, size_t> _path[52];
     static bool _stop_animation;

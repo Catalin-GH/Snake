@@ -28,6 +28,7 @@ void Game::MainStart(void)
     Logo.InitLogo(Position);
     Logo.printLogo();
     thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
+    Sleep(50);
 
     /*place options in the center of the console*/
     Position = { CONSOLE_LENGTH / 2 - (SHORT)_gameInfo->GetMain(0).size() / 2, CONSOLE_HEIGHT / 2 - (SHORT)_gameInfo->GetMain(0).size() / 2 };
@@ -74,6 +75,7 @@ void Game::Main(COORD Position)
                 Logo.SetStopAnimation(TRUE);
                 while (Logo.VerifyAnimation()) {}
                 thread[0].detach();
+                Sleep(50);
                 Logo.ReleaseMemory();
                 Sleep(50);
                 cls();
@@ -88,6 +90,7 @@ void Game::Main(COORD Position)
                 Logo.InitLogo(PositionLogo);
                 Logo.printLogo();
                 thread[0] = std::thread(&AnimatedLogo::Animation, Logo);
+                Sleep(50);
 
                 select = 0;
                 _gameInfo->MainBlockInit(Position);
@@ -120,6 +123,7 @@ void Game::MainOptions(void)
 
     /*print options*/
     _gameInfo->OptionsBlockInit(Position);
+    Sleep(50);
 
     /*arrow is pressed*/
     size_t select = 0;
@@ -135,10 +139,12 @@ void Game::MainOptions(void)
             if (select < 4)
             {
                 _gameInfo->OptionElement(Position, COLOR_MAIN, previousSelected);
+                Sleep(50);
                 ++select;
                 _gameInfo->OptionElement(Position, COLOR_MAIN_SELECT, select);
+                Sleep(50);
             }
-            Sleep(300);
+            Sleep(200);
         }
         else if (GetAsyncKeyState(VK_UP))
         {
@@ -146,10 +152,12 @@ void Game::MainOptions(void)
             if (select > 0)
             {
                 _gameInfo->OptionElement(Position, COLOR_MAIN, previousSelected);
+                Sleep(50);
                 --select;
                 _gameInfo->OptionElement(Position, COLOR_MAIN_SELECT, select);
+                Sleep(50);
             }
-            Sleep(300);
+            Sleep(200);
         }
         else if (GetAsyncKeyState(VK_LEFT))
         {
@@ -175,13 +183,13 @@ void Game::MainOptions(void)
                 } while (Color > 0);
                 switch (select)
                 {
-                case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                case 2: COLOR_FOOD = Colors[2]; break;
+                case 0: COLOR_MAP =   Colors[0]; Logo.printLogo(); Sleep(100); break;
+                case 1: COLOR_WALL =  Colors[1]; Logo.printLogo(); Sleep(100);  break;
+                case 2: COLOR_FOOD =  Colors[2]; break;
                 case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
-            Sleep(500);
+            Sleep(200);
         }
         else if (GetAsyncKeyState(VK_RIGHT))
         {
@@ -207,13 +215,13 @@ void Game::MainOptions(void)
                 } while (Color < 15);
                 switch (select)
                 {
-                case 0: COLOR_MAP = Colors[0]; Logo.printLogo(); break;
-                case 1: COLOR_WALL = Colors[1]; Logo.printLogo(); break;
-                case 2: COLOR_FOOD = Colors[2]; break;
+                case 0: COLOR_MAP =   Colors[0]; Logo.printLogo(); Sleep(100); break;
+                case 1: COLOR_WALL =  Colors[1]; Logo.printLogo(); Sleep(100); break;
+                case 2: COLOR_FOOD =  Colors[2]; break;
                 case 3: COLOR_SNAKE = Colors[3]; break;
                 }
             }
-            Sleep(500);
+            Sleep(200);
         }
         else if (GetAsyncKeyState(VK_RETURN) && select == 4)
         {
@@ -287,6 +295,7 @@ void Game::MainExit()
     while (Logo.VerifyAnimation()) {}
     thread[0].detach();
     Logo.ReleaseMemory();
+    Sleep(50);
 }
 
 COORD Game::operator=(COORD NewPosition)

@@ -26,6 +26,7 @@ private:
     Info * _gameInfo;
     AnimatedLogo Logo;
     std::thread thread[NTHREAD];
+
 public:
     Game(void);
     ~Game(void);

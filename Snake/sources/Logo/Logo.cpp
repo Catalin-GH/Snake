@@ -1,12 +1,12 @@
 #include "Logo.h"
 
-void AnimatedLogo::InitialSetup()
+void AnimatedLogo::InitialSetup(void)
 {
     AllocateMemoryLogoMatrix();
     InitLogoMatrix();
 }
 
-void AnimatedLogo::AllocateMemoryLogoMatrix()
+void AnimatedLogo::AllocateMemoryLogoMatrix(void)
 {
     /*allocate memory for _logo_matrix*/
     _logo_matrix = new size_t *[LOGO_ROWS];
@@ -16,7 +16,7 @@ void AnimatedLogo::AllocateMemoryLogoMatrix()
     }
 }
 
-void AnimatedLogo::ReleaseMemoryLogoMatrix()
+void AnimatedLogo::ReleaseMemoryLogoMatrix(void)
 {
     //release resources from memory for logo background
     for (size_t i = 0; i < LOGO_ROWS; i++)
@@ -69,7 +69,7 @@ void AnimatedLogo::InitPath(void)
     }
 }
 
-void AnimatedLogo::InitLogoMatrix()
+void AnimatedLogo::InitLogoMatrix(void)
 {
     /*template logo*/
     size_t logoMatrix[LOGO_ROWS][LOGO_COLS] = {

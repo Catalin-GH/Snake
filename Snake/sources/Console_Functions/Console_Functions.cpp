@@ -1,18 +1,20 @@
 #include "Console_Functions.h"
 
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
 void gotoxy(size_t x, size_t y)
 {
     COORD pos = { (SHORT)x, (SHORT)y };
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    SetConsoleCursorPosition(console, pos);
 }
 
 void Show_Cursor(bool showFlag)
 {
     CONSOLE_CURSOR_INFO cursorInfo;
 
-    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    GetConsoleCursorInfo(console, &cursorInfo);
     cursorInfo.bVisible = showFlag;
-    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    SetConsoleCursorInfo(console, &cursorInfo);
 }
 
 void cls()
@@ -24,13 +26,13 @@ void SetConsoleSize(int width, int height)
 {
     HWND console = GetConsoleWindow();
     RECT ConsoleRect;
-    GetWindowRect(console, &ConsoleRect); 
+    GetWindowRect(console, &ConsoleRect);
     MoveWindow(console, ConsoleRect.left, ConsoleRect.top, width, height, TRUE);
 }
 
 void SetTextColor(WORD Color)
 {
-    if (!SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color))
+    if (!SetConsoleTextAttribute(console, Color))
     {
         MessageBox(NULL, TEXT("SetConsoleTextAttribute"),
             TEXT("Console Error"), MB_OK);
@@ -48,27 +50,27 @@ void SetConsoleFontSize()
     cfi.FontFamily = FF_DONTCARE;
     //cfi.FontWeight = FW_NORMAL;
     wcscpy_s(cfi.FaceName, L"Consolas");
-    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+    SetCurrentConsoleFontEx(console, FALSE, &cfi);
 
 }
 
 void SetConsoleWindowSize(SHORT x, SHORT y)
 {
-    HWND console = GetConsoleWindow();
+    HWND csl = GetConsoleWindow();
     RECT r;
-    GetWindowRect(console, &r); //stores the console's current dimensions
-    MoveWindow(console, r.left, r.top, x * 11, y * 5, TRUE);
+    GetWindowRect(csl, &r); //stores the console's current dimensions
+    MoveWindow(csl, r.left, r.top, x * 11, y * 5, TRUE);
 
 
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    if (h == INVALID_HANDLE_VALUE)
+    if (console == INVALID_HANDLE_VALUE)
         throw std::runtime_error("Unable to get stdout handle.");
 
     // If either dimension is greater than the largest console window we can have,
     // there is no point in attempting the change.
     {
-        COORD largestSize = GetLargestConsoleWindowSize(h);
+        COORD largestSize = GetLargestConsoleWindowSize(console);
         if (x > largestSize.X)
             throw std::invalid_argument("The x dimension is too large.");
         if (y > largestSize.Y)
@@ -77,7 +79,7 @@ void SetConsoleWindowSize(SHORT x, SHORT y)
 
 
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-    if (!GetConsoleScreenBufferInfo(h, &bufferInfo))
+    if (!GetConsoleScreenBufferInfo(console, &bufferInfo))
         throw std::runtime_error("Unable to retrieve screen buffer info.");
 
     SMALL_RECT& winInfo = bufferInfo.srWindow;
@@ -86,38 +88,32 @@ void SetConsoleWindowSize(SHORT x, SHORT y)
     if (windowSize.X > x || windowSize.Y > y)
     {
         // window size needs to be adjusted before the buffer size can be reduced.
-        SMALL_RECT info =
-        {
-            0,
-            0,
-            x < windowSize.X ? x - 1 : windowSize.X - 1,
-            y < windowSize.Y ? y - 1 : windowSize.Y - 1
-        };
+        SMALL_RECT info = { 0, 0, x < windowSize.X ? x - 1 : windowSize.X - 1,  y < windowSize.Y ? y - 1 : windowSize.Y - 1 };
 
-        if (!SetConsoleWindowInfo(h, TRUE, &info))
+        if (!SetConsoleWindowInfo(console, TRUE, &info))
             throw std::runtime_error("Unable to resize window before resizing buffer.");
     }
 
     COORD size = { x, y };
-    if (!SetConsoleScreenBufferSize(h, size))
+    if (!SetConsoleScreenBufferSize(console, size))
         throw std::runtime_error("Unable to resize screen buffer.");
 
 
     SMALL_RECT info = { 0, 0, x - 1, y - 1 };
-    if (!SetConsoleWindowInfo(h, TRUE, &info))
+    if (!SetConsoleWindowInfo(console, TRUE, &info))
         throw std::runtime_error("Unable to resize window after resizing buffer.");
 
-   /* HWND console = GetConsoleWindow();
-    DWORD newStyle = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-    SetWindowLong(console, GWL_STYLE, newStyle);
-    SetWindowPos(console, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER);*/
+    /* HWND console = GetConsoleWindow();
+     DWORD newStyle = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+     SetWindowLong(console, GWL_STYLE, newStyle);
+     SetWindowPos(console, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER);*/
 
 }
 
 COORD GetConsoleSize()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbiInfo);
+    GetConsoleScreenBufferInfo(console, &csbiInfo);
     COORD size;
     size.X = csbiInfo.dwSize.X;
     size.Y = csbiInfo.dwSize.Y;
