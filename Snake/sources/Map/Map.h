@@ -1,45 +1,40 @@
 #pragma once
 
-#include "Console_Functions.h"
-#include "Snake.h"
-#include "Functions.h"
-#include <fstream>
-#include "Block.h"
 #include <cstdlib>
+#include <fstream>
 #include <time.h>
+
+#include "Block.h"
+#include "Console_Functions.h"
+#include "Functions.h"
+#include "Snake.h"
 
 extern size_t COLOR_MAP;
 extern size_t COLOR_SNAKE;
 extern size_t COLOR_WALL;
 extern size_t COLOR_FOOD;
 
-class Map
-{
+class Map {
 private:
-    Block ** _block;
-    size_t _rows;
-    size_t _cols;
-    COORD _originPosition;
+    Block m_block[MAP_LENGTH][MAP_LENGTH];
+    COORD m_originPosition;
 public:
-    Map(size_t, COORD);
-    ~Map();
+    Map() {}
+    ~Map() {}
 
-    size_t GetRows() const {return _rows;}
-    size_t GetCols() const {return _cols;}
-    Block GetBlock(size_t, size_t) const;
-    Block GetCenterBlock() const;
+    Block getBlock(size_t, size_t) const;
+    Block getCenterBlock() const;
 
-    void Build(void);
-    bool UpdateObject(const std::vector<Block> &);
-    void PrintGraphicObject(const std::vector<Block> &);
-    void DeleteGraphicObject(const std::vector<Block> &);
-    void PrintGraphic(void);
-    COORD RandomPosition(void);
+    void build(COORD);
+    bool updateObject(const std::vector<Block> &);
+    void printGraphicObject(const std::vector<Block> &);
+    void deleteGraphicObject(const std::vector<Block> &);
+    void printGraphic(void);
+    COORD randomPosition(void);
 
-    void SeeInfos(void);
+    void seeInfos(void);
 
-    inline COORD operator=(COORD NewPosition)
-    {
+    inline COORD operator=(COORD NewPosition) {
         COORD Position;
         Position.X = NewPosition.X;
         Position.Y = NewPosition.Y;

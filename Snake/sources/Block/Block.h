@@ -11,46 +11,46 @@ extern HANDLE console;
 class Block
 {
 private:
-    size_t _format;      //ascii value
-    size_t _value;     //clasification
-    size_t * _color;
-    COORD _left;
-    COORD _right;
-    COORD _position;
+    size_t m_format;    //ascii value
+    size_t m_value;     //clasification
+    size_t * m_color;
+    COORD m_left;
+    COORD m_right;
+    COORD m_position;
 public:
     Block();
 
-    inline void SetFormat(size_t f) { _format = f; }
-    inline void SetValue(size_t v) { _value = v; }
-    inline void SetColor(size_t & c) { _color = &c; }
-    inline void SetLeft(COORD l) { _left = l; }
-    inline void SetRight(COORD r) { _right = r; }
-    inline void SetCoord(COORD l, COORD r) { _left = l, _right = r; }
-    inline void SetPosition(COORD p) { _position = p; }
+    inline void SetFormat(size_t f) { m_format = f; }
+    inline void SetValue(size_t v) { m_value = v; }
+    inline void SetColor(size_t & c) { m_color = &c; }
+    inline void SetLeft(COORD l) { m_left = l; }
+    inline void SetRight(COORD r) { m_right = r; }
+    inline void SetCoord(COORD l, COORD r) { m_left = l, m_right = r; }
+    inline void SetPosition(COORD p) { m_position = p; }
     inline void SetBlock(const Block & b)
     {
-        _format = b.GetFormat();
-        _value = b.GetValue();
-        *_color = b.GetColor();
-        _left = b.GetLeft();
-        _right = b.GetRight();
-        _position = b.GetPosition();
+        m_format = b.GetFormat();
+        m_value = b.GetValue();
+        *m_color = b.GetColor();
+        m_left = b.GetLeft();
+        m_right = b.GetRight();
+        m_position = b.GetPosition();
     }
 
-    inline size_t GetFormat() const { return _format; }
-    inline size_t GetValue() const { return _value; }
-    inline size_t GetColor() const { return *_color; }
-    inline COORD GetLeft() const { return _left; }
-    inline COORD GetRight() const { return _right; }
-    inline COORD GetPosition() const { return _position; }
+    inline size_t GetFormat() const { return m_format; }
+    inline size_t GetValue() const { return m_value; }
+    inline size_t GetColor() const { return *m_color; }
+    inline COORD GetLeft() const { return m_left; }
+    inline COORD GetRight() const { return m_right; }
+    inline COORD GetPosition() const { return m_position; }
     inline Block GetBlock() const
     {
         Block block;
-        block.SetFormat(this->_format);
-        block.SetValue(this->_value);
-        block.SetColor(*_color);
-        block.SetCoord(this->_left, this->_right);
-        block.SetPosition(this->_position);
+        block.SetFormat(this->m_format);
+        block.SetValue(this->m_value);
+        block.SetColor(*m_color);
+        block.SetCoord(this->m_left, this->m_right);
+        block.SetPosition(this->m_position);
         return block;
     }
 
@@ -64,7 +64,7 @@ public:
     static void PrintBlock(const Block &, WORD);
 
     inline COORD operator=(COORD);
-    inline friend bool operator==(const COORD &, const COORD &);
     inline bool operator==(const Block &);
+    inline friend bool operator==(const COORD &, const COORD &);
     inline friend bool operator!=(const COORD &, const COORD &);
 };

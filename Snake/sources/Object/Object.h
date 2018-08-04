@@ -10,7 +10,7 @@
 class Object
 {
 protected:
-    std::vector<Block> _object;
+    std::vector<Block> m_object;
 
 public:
     Object() {}

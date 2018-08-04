@@ -1,14 +1,11 @@
 #include "Snake.h"
 
-Snake::Snake(const Block & StartPosition)
-{
-    Build(StartPosition);
+Snake::Snake(const Block & StartPosition) {
+    build(StartPosition);
 }
 
-void Snake::Build(const Block & StartPosition)
-{
-    for (size_t i = 0; i < SNAKE_LENGTH; i++)
-    {
+void Snake::build(const Block & StartPosition) {
+    for (size_t i = 0; i < SNAKE_LENGTH; i++) {
         Block block;
         COORD left = { StartPosition.GetLeft().X, StartPosition.GetLeft().Y - (SHORT)i * 2 };
         COORD right = { StartPosition.GetRight().X, StartPosition.GetRight().Y - (SHORT)i * 2 };
@@ -19,13 +16,13 @@ void Snake::Build(const Block & StartPosition)
         block.SetRight(right);
         block.SetPosition(position);
         block.SetColor(COLOR_SNAKE);
-        _object.push_back(block);
+        m_object.push_back(block);
     }
 }
 
-Block Snake::GetBlockTemplate(COORD left, COORD right, COORD position)
-{
+Block Snake::getBlockTemplate(COORD left, COORD right, COORD position) {
     Block block;
+
     block.SetValue(FORMAT);
     block.SetColor(COLOR_SNAKE);
     block.SetFormat(IS_SNAKE);
@@ -36,97 +33,78 @@ Block Snake::GetBlockTemplate(COORD left, COORD right, COORD position)
     return block;
 }
 
-bool Snake::HitBodyElement(void)
-{
+bool Snake::hitBodyElement(void) {
     bool bVal = FALSE;
-    for (size_t i = 1; i < _object.size(); i++)
-    {
-        if (_object[0].GetPosition() == _object[i].GetPosition())
-        {
+
+    for (size_t i = 1; i < m_object.size(); i++) {
+        if (m_object[0].GetPosition() == m_object[i].GetPosition()) {
             bVal = TRUE;
             break;
         }
     }
+
     return bVal;
 }
 
-void Snake::InsertBodyElement(const Block & NewBlock)
-{
-    _object.push_back(NewBlock);
+void Snake::insertBodyElement(const Block & NewBlock) {
+    m_object.push_back(NewBlock);
 }
 
-void Snake::UpdatePosition(COORD HeadPosition)
-{
+void Snake::updatePosition(COORD HeadPosition) {
     COORD Position = HeadPosition;
-    if (Position == _object[0].GetPosition())
-    {
-        COORD head = _object[0].GetPosition();
-        COORD body1 = _object[1].GetPosition();
-        if (head.Y == body1.Y)
-        {
+    if (Position == m_object[0].GetPosition()) {
+        COORD head = m_object[0].GetPosition();
+        COORD body1 = m_object[1].GetPosition();
+        if (head.Y == body1.Y) {
             Position.Y = head.Y;
-            if (head.X < body1.X)
-            {
+            if (head.X < body1.X) {
                 Position.X = head.X - 1;
             }
-            else if (head.X > body1.X)
-            {
+            else if (head.X > body1.X) {
                 Position.X = head.X + 1;
             }
         }
-        else if (head.X == body1.X)
-        {
+        else if (head.X == body1.X) {
             Position.X = head.X;
-            if (head.Y < body1.Y)
-            {
+            if (head.Y < body1.Y) {
                 Position.Y = head.Y - 1;
             }
-            else if (head.Y > body1.Y)
-            {
+            else if (head.Y > body1.Y) {
                 Position.Y = head.Y + 1;
             }
         }
-        for (size_t it = _object.size() - 1; it > 0; it--)
-        {
-            _object[it].SetPosition(_object[it - 1].GetPosition());
+        for (size_t it = m_object.size() - 1; it > 0; it--) {
+            m_object[it].SetPosition(m_object[it - 1].GetPosition());
         }
-        _object[0].SetPosition(Position);
+        m_object[0].SetPosition(Position);
     }
-    else if (Position == _object[1].GetPosition())
-    {
+    else if (Position == m_object[1].GetPosition()) {
 
     }
-    else
-    {
-        for (size_t it = _object.size() - 1; it > 0; it--)
-        {
-            _object[it].SetPosition(_object[it - 1].GetPosition());
+    else {
+        for (size_t it = m_object.size() - 1; it > 0; it--) {
+            m_object[it].SetPosition(m_object[it - 1].GetPosition());
         }
-        _object[0].SetPosition(HeadPosition);
+        m_object[0].SetPosition(HeadPosition);
     }
 }
 
-COORD Snake::ArrowKeyPress()
-{
-    COORD newPosition = _object[0].GetPosition();
+COORD Snake::arrowKeyPress() {
+    COORD newPosition = m_object[0].GetPosition();
 
-    if (GetAsyncKeyState(VK_LEFT))
-    {
+    if (GetAsyncKeyState(VK_LEFT)) {
         newPosition.Y -= 1;
         return newPosition;
     }
-    if (GetAsyncKeyState(VK_UP))
-    {
+    if (GetAsyncKeyState(VK_UP)) {
         newPosition.X -= 1;
         return newPosition;
     }
-    if (GetAsyncKeyState(VK_RIGHT))
-    {
+    if (GetAsyncKeyState(VK_RIGHT)) {
         newPosition.Y += 1;
         return newPosition;
     }
-    if (GetAsyncKeyState(VK_DOWN))
-    {
+    if (GetAsyncKeyState(VK_DOWN)) {
         newPosition.X += 1;
     }
 
@@ -148,8 +126,7 @@ COORD Snake::ArrowKeyPress()
     return newPosition;
 }
 
-COORD Snake::operator=(const COORD & New_Pos)
-{
+COORD Snake::operator=(const COORD & New_Pos) {
     COORD Actual_Pos;
     Actual_Pos.X = New_Pos.X;
     Actual_Pos.Y = New_Pos.Y;

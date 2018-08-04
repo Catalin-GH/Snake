@@ -1,52 +1,44 @@
 #include "Block.h"
 
-Block::Block()
-{
-    _format = 0;
-    _value = 0;
-    _color = nullptr;
-    _left.X = _left.Y = 0;
-    _right.X = _right.Y = 0;
+Block::Block() {
+    m_format = 0;
+    m_value = 0;
+    m_color = nullptr;
+    m_left.X = m_left.Y = 0;
+    m_right.X = m_right.Y = 0;
 }
 
-void Block::ShowFormat(std::ostream& stream)
-{
-    stream << (int)_format << " ";
+void Block::ShowFormat(std::ostream& stream) {
+    stream << (int)m_format << " ";
     return;
 }
 
-void Block::ShowValue(std::ostream& stream)
-{
-    stream << (int)_value << " ";
+void Block::ShowValue(std::ostream& stream) {
+    stream << (int)m_value << " ";
     return;
 }
 
-void Block::ShowColor(std::ostream& stream)
-{
-    stream << (int)*_color << " ";
+void Block::ShowColor(std::ostream& stream) {
+    stream << (int)*m_color << " ";
     return;
 }
 
-void Block::ShowLeft(std::ostream& stream)
-{
-    stream << _left.X << "," << _left.Y << " ";
+void Block::ShowLeft(std::ostream& stream) {
+    stream << m_left.X << "," << m_left.Y << " ";
     return;
 }
 
-void Block::ShowRight(std::ostream& stream)
-{
-    stream << _right.X << "," << _right.Y << "  ";
+void Block::ShowRight(std::ostream& stream) {
+    stream << m_right.X << "," << m_right.Y << "  ";
     return;
 }
 
-void Block::ShowPosition(std::ostream& stream)
-{
-    stream << _position.X << "," << _position.Y << " ";
+void Block::ShowPosition(std::ostream& stream) {
+    stream << m_position.X << "," << m_position.Y << " ";
     return;
 }
 
-void Block::PrintBlock(const Block & Block, WORD Color)
-{
+void Block::PrintBlock(const Block & Block, WORD Color) {
     size_t lx = Block.GetLeft().X;
     size_t ly = Block.GetLeft().Y;
     size_t rx = Block.GetRight().X;
@@ -61,16 +53,20 @@ void Block::PrintBlock(const Block & Block, WORD Color)
     std::cout.clear();
 }
 
-bool Block::operator==(const Block & b1)
-{
+bool Block::operator==(const Block & b1) {
     bool bVal = FALSE;
-    if (b1.GetValue() != _value && b1.GetColor() != *_color && b1.GetPosition() != _position && b1.GetLeft() != _left && b1.GetRight() != _right)
+    if (b1.GetValue() != m_value
+        && b1.GetColor() != *m_color
+        && b1.GetPosition() != m_position
+        && b1.GetLeft() != m_left
+        && b1.GetRight() != m_right) {
         bVal = TRUE;
+    }
+
     return bVal;
 }
 
-COORD Block::operator=(COORD NewPosition)
-{
+COORD Block::operator=(COORD NewPosition) {
     COORD Position;
     Position.X = NewPosition.X;
     Position.Y = NewPosition.Y;

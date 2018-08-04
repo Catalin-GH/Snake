@@ -1,15 +1,16 @@
 #pragma once
 
-#include <string>
-#include "Food.h"
-#include "Map.h"
-#include "Snake.h"
-#include "Informations.h"
-#include "Functions.h"
-#include "Object.h"
-#include "Logo.h"
-#include <thread>
 #include <algorithm>
+#include <string> 
+#include <thread>
+
+#include "Food.h"
+#include "Functions.h"
+#include "Information.h"
+#include "Map.h"
+#include "Logo.h"
+#include "Object.h"
+#include "Snake.h"
 
 #define SPEED 100
 #define START_GAME 0
@@ -20,12 +21,12 @@
 class Game
 {
 private:
-    Map * _map;
-    Snake _snake;
-    Food * _food;
-    Info * _gameInfo;
-    AnimatedLogo Logo;
-    std::thread thread[NTHREAD];
+    Map m_map;
+    Snake m_snake;
+    Food m_food;
+    Info m_gameInfo;
+    AnimatedLogo m_logo;
+    std::thread m_thread[NTHREAD];
 
 public:
     Game(void);

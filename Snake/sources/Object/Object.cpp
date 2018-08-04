@@ -19,14 +19,14 @@ void Object::SeeInfos(uint8_t Identifier)
     std::ofstream cdout(FileName[2], std::ios_base::app);
     std::ofstream cout(FileName[3], std::ios_base::app);
     std::ofstream pout(FileName[4], std::ios_base::app);
-    for (size_t j = 0; j < _object.size(); j++)
+    for (size_t j = 0; j < m_object.size(); j++)
     {
-        _object[j].ShowColor(cout);
-        _object[j].ShowFormat(eout);
-        _object[j].ShowValue(vout);
-        _object[j].ShowLeft(cdout);
-        _object[j].ShowRight(cdout);
-        _object[j].ShowPosition(pout);
+        m_object[j].ShowColor(cout);
+        m_object[j].ShowFormat(eout);
+        m_object[j].ShowValue(vout);
+        m_object[j].ShowLeft(cdout);
+        m_object[j].ShowRight(cdout);
+        m_object[j].ShowPosition(pout);
     }
 
     eout << std::endl << std::endl;

@@ -9,6 +9,6 @@ class Food : public Object
 public:
     Food();
     void SetPosition(COORD, COORD, COORD);
-    Block GetBlock() const { return _object[0]; }
-    std::vector<Block> GetFood() const { return _object; }
+    Block GetBlock() const { return m_object[0]; }
+    std::vector<Block> GetFood() const { return m_object; }
 };

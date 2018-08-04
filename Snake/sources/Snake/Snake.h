@@ -9,14 +9,15 @@ class Snake : public Object
 public:
     Snake() {}
     Snake(const Block &);
-    inline std::vector<Block> GetSnake() const {return _object;}
-    inline size_t GetLength() const {return _object.size();}
-    void Build(const Block &);
-    Block GetBlockTemplate(COORD, COORD, COORD);
-    bool HitBodyElement(void);
-    void InsertBodyElement(const Block &);
-    void UpdatePosition(COORD);
-    COORD ArrowKeyPress();
+
+    inline std::vector<Block> getSnake() const {return m_object;}
+    inline size_t getLength() const {return m_object.size();}
+    void build(const Block &);
+    Block getBlockTemplate(COORD, COORD, COORD);
+    bool hitBodyElement(void);
+    void insertBodyElement(const Block &);
+    void updatePosition(COORD);
+    COORD arrowKeyPress();
 
     COORD operator=(const COORD &);
     friend bool operator==(const COORD &, const COORD &);

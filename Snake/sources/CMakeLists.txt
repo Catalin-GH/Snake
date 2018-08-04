@@ -27,8 +27,8 @@ set (Snake
 	)	
 
 set (Infos
-	Infos/Informations.h
-	Infos/Informations.cpp
+	Infos/Information.h
+	Infos/Information.cpp
 	)
 	
 set (Map

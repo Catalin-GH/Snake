@@ -17,5 +17,7 @@
 
 #define SNAKE_LENGTH 5
 
+#define MAP_LENGTH 20
+
 bool operator==(const COORD &, const COORD &);
 bool operator!=(const COORD &, const COORD &);
