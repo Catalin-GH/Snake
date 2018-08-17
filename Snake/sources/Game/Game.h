@@ -18,6 +18,11 @@
 #define EXIT 2
 #define NTHREAD 1
 
+extern size_t COLOR_MAP;
+extern size_t COLOR_SNAKE;
+extern size_t COLOR_WALL;
+extern size_t COLOR_FOOD;
+
 class Game
 {
 private:

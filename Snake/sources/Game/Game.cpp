@@ -116,7 +116,7 @@ void Game::MainOptions(void)
 
     /*arrow is pressed*/
     size_t select = 0;
-    std::vector<size_t> Colors = { COLOR_MAP, COLOR_WALL, COLOR_FOOD, COLOR_SNAKE };
+    size_t colors[] = { COLOR_MAP, COLOR_WALL, COLOR_FOOD, COLOR_SNAKE };
     bool bVal = FALSE;
     while (!bVal) {
         Show_Cursor(FALSE);
@@ -144,56 +144,56 @@ void Game::MainOptions(void)
             Sleep(200);
         }
         else if (GetAsyncKeyState(VK_LEFT)) {
-            if (Colors[select] > 0) {
-                size_t Color = Colors[select];
+            if (colors[select] > 0) {
+                size_t Color = colors[select];
                 do {
                     --Color;
-                    bool bVal = FALSE;
-                    for (size_t i = 0; i < 4; i++) {
-                        if (Color == Colors[i]) {
-                            bVal = TRUE;
+                    bool colorNotFound = FALSE;
+                    for (size_t i = 0; i < 4; i++) {    //verifica existenta culorii
+                        if (Color == colors[i]) {
+                            colorNotFound = TRUE;
                         }
                     }
-                    if (!bVal) {
-                        Colors[select] = Color;
+                    if (!colorNotFound) {
+                        colors[select] = Color;
                         break;
                     }
                 } while (Color > 0);
                 switch (select) {
-                case 0: COLOR_MAP =   Colors[0]; m_logo.printLogo(); Sleep(100); break;
-                case 1: COLOR_WALL =  Colors[1]; m_logo.printLogo(); Sleep(100);  break;
-                case 2: COLOR_FOOD =  Colors[2]; break;
-                case 3: COLOR_SNAKE = Colors[3]; break;
+                case 0: COLOR_MAP = colors[0]; m_logo.setMapColor(COLOR_MAP);  m_logo.printLogo(); Sleep(100); break;
+                case 1: COLOR_WALL =  colors[1]; m_logo.setWallColor(COLOR_WALL); m_logo.printLogo(); Sleep(100);  break;
+                case 2: COLOR_FOOD = colors[2]; m_logo.setFoodColor(COLOR_FOOD);  break;
+                case 3: COLOR_SNAKE = colors[3]; m_logo.setSnakeColor(COLOR_SNAKE);  break;
                 }
             }
-            Sleep(200);
+            Sleep(50);
         }
         else if (GetAsyncKeyState(VK_RIGHT)) {
-            if (Colors[select] < 15) {
-                size_t Color = Colors[select];
+            if (colors[select] < 15) {
+                size_t Color = colors[select];
 
                 do {
                     ++Color;
-                    bool bVal = FALSE;
+                    bool colorNotFound = FALSE;
                     for (size_t i = 0; i < 4; i++) {
-                        if (Color == Colors[i]) {
-                            bVal = TRUE;
+                        if (Color == colors[i]) {
+                            colorNotFound = TRUE;
                         }
                     }
-                    if (!bVal) {
-                        Colors[select] = Color;
+                    if (!colorNotFound) {
+                        colors[select] = Color;
                         break;
                     }
                 } while (Color < 15);
 
                 switch (select) {
-                case 0: COLOR_MAP =   Colors[0]; m_logo.printLogo(); Sleep(100); break;
-                case 1: COLOR_WALL =  Colors[1]; m_logo.printLogo(); Sleep(100); break;
-                case 2: COLOR_FOOD =  Colors[2]; break;
-                case 3: COLOR_SNAKE = Colors[3]; break;
+                case 0: COLOR_MAP   = colors[0]; m_logo.setMapColor(COLOR_MAP);     m_logo.printLogo(); Sleep(100); break;
+                case 1: COLOR_WALL  = colors[1]; m_logo.setWallColor(COLOR_WALL);   m_logo.printLogo(); Sleep(100); break;
+                case 2: COLOR_FOOD  = colors[2]; m_logo.setFoodColor(COLOR_FOOD);   break;
+                case 3: COLOR_SNAKE = colors[3]; m_logo.setSnakeColor(COLOR_SNAKE); break;
                 }
             }
-            Sleep(200);
+            Sleep(50);
         }
         else if (GetAsyncKeyState(VK_RETURN) && select == 4) {
             bVal = TRUE;
@@ -209,7 +209,7 @@ void Game::SnakeGame(void) {
     COORD Position = { 2, 3 };
     m_gameInfo.PrintPointsInConsole(Position);
     COORD RandPoint = m_map.randomPosition();
-    m_food.SetPosition(m_map.getBlock(RandPoint.X, RandPoint.Y).GetLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
+    m_food.SetPosition(m_map.getBlock(RandPoint.X, RandPoint.Y).getLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).getRight(), RandPoint);
     m_snake = Snake(m_map.getCenterBlock());
     m_map.updateObject(m_snake.getSnake());
     m_map.printGraphicObject(m_snake.getSnake());
@@ -224,15 +224,15 @@ void Game::SnakeGame(void) {
         if (m_map.updateObject(m_snake.getSnake()) && !m_snake.hitBodyElement())
         {
             m_map.printGraphicObject(m_snake.getSnake());
-            if (m_snake.getSnake()[0].GetPosition() == m_food.GetBlock().GetPosition())
+            if (m_snake.getSnake()[0].getPosition() == m_food.GetBlock().getPosition())
             {
                 COORD Position = { 2, 3 };
                 m_gameInfo.IncreasePoints();
                 m_gameInfo.PrintPointsInConsole(Position);
-                m_snake.insertBodyElement(m_snake.getBlockTemplate(m_map.getBlock(RandPoint.X, RandPoint.Y).GetLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint));
+                m_snake.insertBodyElement(m_snake.getBlockTemplate(m_map.getBlock(RandPoint.X, RandPoint.Y).getLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).getRight(), RandPoint));
                 COORD RandPoint = m_map.randomPosition();
                 m_map.deleteGraphicObject(m_food.GetFood());
-                m_food.SetPosition(m_map.getBlock(RandPoint.X, RandPoint.Y).GetLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).GetRight(), RandPoint);
+                m_food.SetPosition(m_map.getBlock(RandPoint.X, RandPoint.Y).getLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).getRight(), RandPoint);
                 m_map.updateObject(m_food.GetFood());
                 m_map.printGraphicObject(m_food.GetFood());
             }

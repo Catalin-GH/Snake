@@ -18,16 +18,16 @@ void Map::build(COORD coord) {  // se initializeaza blocurile ce alcatuiesc hart
             COORD left = { (SHORT)i + m_originPosition.X, (SHORT)j * 2 + m_originPosition.Y };
             COORD right = { (SHORT)i + m_originPosition.X, (SHORT)j * 2 + 1 + m_originPosition.Y };
             COORD position = { (SHORT)i, (SHORT)j };
-            (m_block[i][j]).SetCoord(left, right);
-            (m_block[i][j]).SetFormat(FORMAT);
-            (m_block[i][j]).SetPosition(position);
+            (m_block[i][j]).setCoord(left, right);
+            (m_block[i][j]).setFormat(FORMAT);
+            (m_block[i][j]).setPosition(position);
             if (i == 0 || j < 1 || i > MAP_LENGTH - 2 || j > MAP_LENGTH - 2) {
-                (m_block[i][j]).SetValue(IS_WALL);
-                (m_block[i][j]).SetColor(COLOR_WALL);
+                (m_block[i][j]).setValue(IS_WALL);
+                (m_block[i][j]).setColor(COLOR_WALL);
             } 
             else {
-                (m_block[i][j]).SetValue(IS_MAP);
-                (m_block[i][j]).SetColor(COLOR_MAP);
+                (m_block[i][j]).setValue(IS_MAP);
+                (m_block[i][j]).setColor(COLOR_MAP);
             }
         }
     }
@@ -35,24 +35,24 @@ void Map::build(COORD coord) {  // se initializeaza blocurile ce alcatuiesc hart
 
 bool Map::updateObject(const std::vector<Block> & Object) {
     bool bVal = TRUE;
-    size_t X = Object[0].GetPosition().X;
-    size_t Y = Object[0].GetPosition().Y;
-    if((m_block[X][Y]).GetValue() == IS_WALL) {
+    size_t X = Object[0].getPosition().X;
+    size_t Y = Object[0].getPosition().Y;
+    if((m_block[X][Y]).getValue() == IS_WALL) {
         bVal = FALSE;
     }
     else if(Object.size() >= SNAKE_LENGTH) {
         for (size_t i = 0; i < Object.size(); i++) {
-            size_t x = Object[i].GetPosition().X;
-            size_t y = Object[i].GetPosition().Y;
-            (m_block[x][y]).SetColor(COLOR_SNAKE);
-            (m_block[x][y]).SetValue(IS_SNAKE);
+            size_t x = Object[i].getPosition().X;
+            size_t y = Object[i].getPosition().Y;
+            (m_block[x][y]).setColor(COLOR_SNAKE);
+            (m_block[x][y]).setValue(IS_SNAKE);
         }
     }
     else {
-        size_t x = Object[0].GetPosition().X;
-        size_t y = Object[0].GetPosition().Y;
-        (m_block[x][y]).SetColor(COLOR_FOOD);
-        (m_block[x][y]).SetValue(IS_FOOD);
+        size_t x = Object[0].getPosition().X;
+        size_t y = Object[0].getPosition().Y;
+        (m_block[x][y]).setColor(COLOR_FOOD);
+        (m_block[x][y]).setValue(IS_FOOD);
     }
 
     return bVal;
@@ -60,25 +60,25 @@ bool Map::updateObject(const std::vector<Block> & Object) {
 
 void Map::printGraphicObject(const std::vector<Block> & Object) {
     for (size_t i = 0; i < Object.size(); i++) {
-        size_t x = Object[i].GetPosition().X;
-        size_t y = Object[i].GetPosition().Y;
-        Block::PrintBlock(m_block[x][y], (WORD)(m_block[x][y]).GetColor());
+        size_t x = Object[i].getPosition().X;
+        size_t y = Object[i].getPosition().Y;
+        m_block[x][y].printBlock();
     }
 }
 
 void Map::deleteGraphicObject(const std::vector<Block> & Object) {
     for(size_t i = 0; i < Object.size(); i++) {
-        size_t x = Object[i].GetPosition().X;
-        size_t y = Object[i].GetPosition().Y;
-        (m_block[x][y]).SetValue(IS_MAP);
-        (m_block[x][y]).SetColor(COLOR_MAP);
+        size_t x = Object[i].getPosition().X;
+        size_t y = Object[i].getPosition().Y;
+        (m_block[x][y]).setValue(IS_MAP);
+        (m_block[x][y]).setColor(COLOR_MAP);
     }
 }
 
 void Map::printGraphic(void) {
     for (size_t i = 0; i < MAP_LENGTH; i++) {
         for (size_t j = 0; j < MAP_LENGTH; j++) {
-            Block::PrintBlock(m_block[i][j], (WORD)(m_block[i][j]).GetColor());
+            m_block[i][j].printBlock();
         }
         std::cout << std::endl;
     }
@@ -91,9 +91,9 @@ COORD Map::randomPosition(void) {
     do {
         x = rand() % MAP_LENGTH;
         y = rand() % MAP_LENGTH;
-    } while (!((m_block[x][y]).GetValue() == IS_MAP));
+    } while (!((m_block[x][y]).getValue() == IS_MAP));
 
-    return (m_block[x][y]).GetPosition();
+    return (m_block[x][y]).getPosition();
 }
 
 void Map::seeInfos(void) {

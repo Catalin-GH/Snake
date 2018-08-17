@@ -18,7 +18,7 @@ extern size_t COLOR_SNAKE;
 class AnimatedLogo
 {
 private:
-    Block m_logo[LOGO_ROWS][LOGO_COLS];                 //entire logo properties
+    Block m_logo[LOGO_ROWS][LOGO_COLS];                 //entire logo
     Block  m_logo_part[LOGOPART_LENGHT];            //just snake and food properties
     size_t m_logo_matrix[LOGO_ROWS][LOGO_COLS];         //used for path, letters and the line in the footer of the logo
     std::pair<size_t, size_t> m_path[52];
@@ -30,6 +30,28 @@ public:
     inline bool StopAnimation() { return m_stop_animation; }
     inline bool VerifyAnimation() { return m_animation_stopped; }
     
+    void setMapColor(size_t color) {
+        for (uint8_t i = 0; i < LOGO_ROWS - 1; i++) {
+            for (uint8_t j = 0; j < LOGO_COLS; j++) {
+                if (m_logo_matrix[i][j] > 0) {
+                    m_logo[i][j].setColor(color);
+                }
+            }
+        }
+    }
+    void setWallColor(size_t color) {
+        for (uint8_t i = LOGO_ROWS - 1; i < LOGO_ROWS; i++) {
+            for (uint8_t j = 0; j < LOGO_COLS; j++) {
+                m_logo[i][j].setColor(color);
+            }
+        }
+    }
+    void setSnakeColor(size_t color) {
+        for(uint8_t i = 0; i < SNAKE_LENGTH; i++) {
+            m_logo_part[i].setColor(color);
+        }
+    };
+    void setFoodColor(size_t color) { m_logo_part[LOGOPART_LENGHT - 1].setColor(color); }
     void InitialSetup(void);
     void InitLogoMatrix(void);
     void InitPath(void);

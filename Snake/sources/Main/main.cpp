@@ -2,7 +2,6 @@
 
 int main(void)
 {
-    Game *game = new Game();
-    game->MainStart();
-    delete game;
+    Game game;
+    game.MainStart();
 }

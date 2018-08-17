@@ -1,11 +1,11 @@
 #include "Block.h"
 
-Block::Block() {
-    m_format = 0;
-    m_value = 0;
-    m_color = nullptr;
-    m_left.X = m_left.Y = 0;
-    m_right.X = m_right.Y = 0;
+Block::Block() : 
+    m_format { FORMAT },
+    m_value { 0 },
+    m_color { 0 },
+    m_left { 0, 0 },
+    m_right { 0, 0 } {
 }
 
 void Block::ShowFormat(std::ostream& stream) {
@@ -19,7 +19,7 @@ void Block::ShowValue(std::ostream& stream) {
 }
 
 void Block::ShowColor(std::ostream& stream) {
-    stream << (int)*m_color << " ";
+    stream << (int)m_color << " ";
     return;
 }
 
@@ -38,28 +38,22 @@ void Block::ShowPosition(std::ostream& stream) {
     return;
 }
 
-void Block::PrintBlock(const Block & Block, WORD Color) {
-    size_t lx = Block.GetLeft().X;
-    size_t ly = Block.GetLeft().Y;
-    size_t rx = Block.GetRight().X;
-    size_t ry = Block.GetRight().Y;
-    gotoxy(ly, lx);             //(col, row)
-    SetConsoleTextAttribute(console, Color);
-    std::cout << ((char)Block.GetFormat());
-    std::cout.clear();
-    gotoxy(ry, rx);             //(col, row)
-    SetConsoleTextAttribute(console, Color);
-    std::cout << ((char)Block.GetFormat());
-    std::cout.clear();
+void Block::printBlock() {
+    gotoxy(this->m_left.Y, this->m_left.X);             //(col, row)
+    SetConsoleTextAttribute(console, this->m_color);
+    std::cout << ((char)this->m_format);
+    gotoxy(this->m_right.Y, this->m_right.X);             //(col, row)
+    SetConsoleTextAttribute(console, this->m_color);
+    std::cout << ((char)this->m_format);
 }
 
 bool Block::operator==(const Block & b1) {
     bool bVal = FALSE;
-    if (b1.GetValue() != m_value
-        && b1.GetColor() != *m_color
-        && b1.GetPosition() != m_position
-        && b1.GetLeft() != m_left
-        && b1.GetRight() != m_right) {
+    if (b1.getValue() != m_value
+        && b1.getColor() != m_color
+        && b1.getPosition() != m_position
+        && b1.getLeft() != m_left
+        && b1.getRight() != m_right) {
         bVal = TRUE;
     }
 

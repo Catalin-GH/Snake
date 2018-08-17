@@ -10,8 +10,8 @@ void AnimatedLogo::InitPath(void) {
     for (size_t k = 1; k < 52; k++) {
         for (size_t i = 0; i < LOGO_ROWS; i++) {
             for (size_t j = 0; j < LOGO_COLS; j++) {
-                if (m_logo[i][j].GetValue() ==
-                    (1 + m_logo[m_path[k - 1].first][m_path[k - 1].second].GetValue())) {
+                if (m_logo[i][j].getValue() ==
+                    (1 + m_logo[m_path[k - 1].first][m_path[k - 1].second].getValue())) {
                     m_path[k] = std::make_pair(i, j);
                 }
             }
@@ -45,11 +45,11 @@ void AnimatedLogo::InitLogo(COORD Position) {
                 COORD left =  { SHORT(Position.X + i), SHORT(Position.Y + j * 2) };
                 COORD right = { SHORT(Position.X + i), SHORT(Position.Y + j * 2 + 1) };
                 COORD pos =   { (SHORT)i, (SHORT)j };
-                m_logo[i][j].SetFormat(FORMAT);
-                m_logo[i][j].SetValue(m_logo_matrix[i][j]);   // used for path
-                m_logo[i][j].SetCoord(left, right);
-                m_logo[i][j].SetPosition(pos);
-                m_logo[i][j].SetColor(i == 5 ? COLOR_WALL : COLOR_MAP);
+                m_logo[i][j].setFormat(FORMAT);
+                m_logo[i][j].setValue(m_logo_matrix[i][j]);   // used for path
+                m_logo[i][j].setCoord(left, right);
+                m_logo[i][j].setPosition(pos);
+                m_logo[i][j].setColor(i == 5 ? COLOR_WALL : COLOR_MAP);
             }
         }
     }
@@ -57,12 +57,12 @@ void AnimatedLogo::InitLogo(COORD Position) {
     /*set logoPart proprieties*/
     for (size_t i = 0; i < LOGOPART_LENGHT; i++) {
         switch (i) {
-        case 0:  m_logo_part[i].SetColor(COLOR_FOOD);  m_logo_part[i].SetValue(IS_FOOD); break;
-        case 1:  m_logo_part[i].SetColor(COLOR_MAP);   m_logo_part[i].SetValue(IS_MAP);  break;
-        case 2:  m_logo_part[i].SetColor(COLOR_MAP);   m_logo_part[i].SetValue(IS_MAP);  break;
-        default: m_logo_part[i].SetColor(COLOR_SNAKE); m_logo_part[i].SetValue(IS_SNAKE);
+        case 0:  m_logo_part[i].setColor(COLOR_FOOD);  m_logo_part[i].setValue(IS_FOOD); break;
+        case 1:  m_logo_part[i].setColor(COLOR_MAP);   m_logo_part[i].setValue(IS_MAP);  break;
+        case 2:  m_logo_part[i].setColor(COLOR_MAP);   m_logo_part[i].setValue(IS_MAP);  break;
+        default: m_logo_part[i].setColor(COLOR_SNAKE); m_logo_part[i].setValue(IS_SNAKE);
         }
-        m_logo_part[i].SetFormat(FORMAT);
+        m_logo_part[i].setFormat(FORMAT);
     }
 
     /*set the m_path variable*/
@@ -76,8 +76,8 @@ void AnimatedLogo::InitLogo(COORD Position) {
 void AnimatedLogo::printLogo(void) {
     for (size_t i = 0; i < LOGO_ROWS; i++) {
         for (size_t j = 0; j < LOGO_COLS; j++) {
-            if (m_logo[i][j].GetValue())
-                Block::PrintBlock(m_logo[i][j], (WORD)m_logo[i][j].GetColor());
+            if (m_logo[i][j].getValue())
+                m_logo[i][j].printBlock();
         }
     }
 }
@@ -90,17 +90,18 @@ void AnimatedLogo::Animation(void) {
     while (!m_stop_animation) {
         for (size_t i = 0; i < 52; i++) {
             if (m_stop_animation) {
-                break;
                 m_animation_stopped = TRUE;
+                break;
             }
+
             if (i < LOGOPART_LENGHT) {
                 for (size_t j = 0; j <= i; j++) {
                     /*print first LOGOPART_LENGHT blocks*/
                     size_t x = m_path[i - j].first;
                     size_t y = m_path[i - j].second;
-                    m_logo_part[j].SetCoord(m_logo[x][y].GetLeft(), m_logo[x][y].GetRight());
-                    m_logo_part[j].SetPosition(m_logo[x][y].GetPosition());
-                    Block::PrintBlock(m_logo_part[j], (WORD)m_logo_part[j].GetColor());
+                    m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
+                    m_logo_part[j].setPosition(m_logo[x][y].getPosition());
+                    m_logo_part[j].printBlock();
                 }
 
                 /*print last LOGOPART_LENGHT blocks*/
@@ -109,13 +110,14 @@ void AnimatedLogo::Animation(void) {
                     for (; j > i; j--) {
                         size_t x = m_path[52 + i - j].first;
                         size_t y = m_path[52 + i - j].second;
-                        m_logo_part[j].SetCoord(m_logo[x][y].GetLeft(), m_logo[x][y].GetRight());
-                        m_logo_part[j].SetPosition(m_logo[x][y].GetPosition());
-                        Block::PrintBlock(m_logo_part[j], (j == 1 || j == 2) ? (WORD)m_logo[x][y].GetColor() : (WORD)m_logo_part[j].GetColor());
+                        m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
+                        m_logo_part[j].setPosition(m_logo[x][y].getPosition());
+                        m_logo_part[j].setColor((j == 1 || j == 2) ? (WORD)m_logo[x][y].getColor() : (WORD)m_logo_part[j].getColor());
+                        m_logo_part[j].printBlock();
                     }
                     size_t x = m_path[52 + i - LOGOPART_LENGHT].first;
                     size_t y = m_path[52 + i - LOGOPART_LENGHT].second;
-                    Block::PrintBlock(m_logo[x][y], (WORD)m_logo[x][y].GetColor());
+                    m_logo[x][y].printBlock();
                 }
             }
             else /*print the left blocks*/ {
@@ -124,19 +126,20 @@ void AnimatedLogo::Animation(void) {
                 for (; j < LOGOPART_LENGHT; j++) {
                     size_t x = m_path[i - j].first;
                     size_t y = m_path[i - j].second;
-                    m_logo_part[j].SetCoord(m_logo[x][y].GetLeft(), m_logo[x][y].GetRight());
-                    m_logo_part[j].SetPosition(m_logo[x][y].GetPosition());
-                    Block::PrintBlock(m_logo_part[j], (j == 1 || j == 2) ? (WORD)m_logo[x][y].GetColor() : (WORD)m_logo_part[j].GetColor());
+                    m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
+                    m_logo_part[j].setPosition(m_logo[x][y].getPosition());
+                    m_logo_part[j].setColor((j == 1 || j == 2) ? (WORD)m_logo[x][y].getColor() : (WORD)m_logo_part[j].getColor());
+                    m_logo_part[j].printBlock();
                 }
                 size_t x = m_path[i - j].first;
                 size_t y = m_path[i - j].second;
-                Block::PrintBlock(m_logo[x][y], (WORD)m_logo[x][y].GetColor());
+                m_logo[x][y].printBlock();
             }
             Sleep(150);
         }
         if (m_stop_animation) {
-            break;
             m_animation_stopped = TRUE;
+            break;
         }
     }
 }

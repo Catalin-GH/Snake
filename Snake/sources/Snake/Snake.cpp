@@ -7,15 +7,15 @@ Snake::Snake(const Block & StartPosition) {
 void Snake::build(const Block & StartPosition) {
     for (size_t i = 0; i < SNAKE_LENGTH; i++) {
         Block block;
-        COORD left = { StartPosition.GetLeft().X, StartPosition.GetLeft().Y - (SHORT)i * 2 };
-        COORD right = { StartPosition.GetRight().X, StartPosition.GetRight().Y - (SHORT)i * 2 };
-        COORD position = { StartPosition.GetPosition().X, StartPosition.GetPosition().Y - (SHORT)i };
-        block.SetValue(FORMAT);
-        block.SetFormat(IS_SNAKE);
-        block.SetLeft(left);
-        block.SetRight(right);
-        block.SetPosition(position);
-        block.SetColor(COLOR_SNAKE);
+        COORD left = { StartPosition.getLeft().X, StartPosition.getLeft().Y - (SHORT)i * 2 };
+        COORD right = { StartPosition.getRight().X, StartPosition.getRight().Y - (SHORT)i * 2 };
+        COORD position = { StartPosition.getPosition().X, StartPosition.getPosition().Y - (SHORT)i };
+        block.setValue(FORMAT);
+        block.setFormat(IS_SNAKE);
+        block.setLeft(left);
+        block.setRight(right);
+        block.setPosition(position);
+        block.setColor(COLOR_SNAKE);
         m_object.push_back(block);
     }
 }
@@ -23,12 +23,12 @@ void Snake::build(const Block & StartPosition) {
 Block Snake::getBlockTemplate(COORD left, COORD right, COORD position) {
     Block block;
 
-    block.SetValue(FORMAT);
-    block.SetColor(COLOR_SNAKE);
-    block.SetFormat(IS_SNAKE);
-    block.SetLeft(left);
-    block.SetRight(right);
-    block.SetPosition(position);
+    block.setValue(FORMAT);
+    block.setColor(COLOR_SNAKE);
+    block.setFormat(IS_SNAKE);
+    block.setLeft(left);
+    block.setRight(right);
+    block.setPosition(position);
 
     return block;
 }
@@ -37,7 +37,7 @@ bool Snake::hitBodyElement(void) {
     bool bVal = FALSE;
 
     for (size_t i = 1; i < m_object.size(); i++) {
-        if (m_object[0].GetPosition() == m_object[i].GetPosition()) {
+        if (m_object[0].getPosition() == m_object[i].getPosition()) {
             bVal = TRUE;
             break;
         }
@@ -52,9 +52,9 @@ void Snake::insertBodyElement(const Block & NewBlock) {
 
 void Snake::updatePosition(COORD HeadPosition) {
     COORD Position = HeadPosition;
-    if (Position == m_object[0].GetPosition()) {
-        COORD head = m_object[0].GetPosition();
-        COORD body1 = m_object[1].GetPosition();
+    if (Position == m_object[0].getPosition()) {
+        COORD head = m_object[0].getPosition();
+        COORD body1 = m_object[1].getPosition();
         if (head.Y == body1.Y) {
             Position.Y = head.Y;
             if (head.X < body1.X) {
@@ -74,23 +74,23 @@ void Snake::updatePosition(COORD HeadPosition) {
             }
         }
         for (size_t it = m_object.size() - 1; it > 0; it--) {
-            m_object[it].SetPosition(m_object[it - 1].GetPosition());
+            m_object[it].setPosition(m_object[it - 1].getPosition());
         }
-        m_object[0].SetPosition(Position);
+        m_object[0].setPosition(Position);
     }
-    else if (Position == m_object[1].GetPosition()) {
+    else if (Position == m_object[1].getPosition()) {
 
     }
     else {
         for (size_t it = m_object.size() - 1; it > 0; it--) {
-            m_object[it].SetPosition(m_object[it - 1].GetPosition());
+            m_object[it].setPosition(m_object[it - 1].getPosition());
         }
-        m_object[0].SetPosition(HeadPosition);
+        m_object[0].setPosition(HeadPosition);
     }
 }
 
 COORD Snake::arrowKeyPress() {
-    COORD newPosition = m_object[0].GetPosition();
+    COORD newPosition = m_object[0].getPosition();
 
     if (GetAsyncKeyState(VK_LEFT)) {
         newPosition.Y -= 1;
