@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <cstdio>
 #include <iostream>
-#include<mutex>
 
 #define CONSOLE_LENGTH 80
 #define CONSOLE_HEIGHT 40
@@ -17,7 +16,7 @@ void SetTextColor(WORD);
 void SetConsoleFontSize();
 void SetConsoleWindowSize(SHORT, SHORT);
 COORD GetConsoleSize();
-void ConsoleTitle(std::string);
+void ConsoleTitle();
 
 void DisableMaximizeButton();
 void DisableResize();

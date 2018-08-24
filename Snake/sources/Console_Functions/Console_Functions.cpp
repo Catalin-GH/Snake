@@ -22,6 +22,7 @@ void cls()
     system("cls");
 }
 
+//used once
 void SetConsoleSize(int width, int height)
 {
     HWND console = GetConsoleWindow();
@@ -40,6 +41,7 @@ void SetTextColor(WORD Color)
     }
 }
 
+//set once
 void SetConsoleFontSize()
 {
     CONSOLE_FONT_INFOEX cfi;
@@ -54,15 +56,13 @@ void SetConsoleFontSize()
 
 }
 
+//set once
 void SetConsoleWindowSize(SHORT x, SHORT y)
 {
     HWND csl = GetConsoleWindow();
     RECT r;
     GetWindowRect(csl, &r); //stores the console's current dimensions
     MoveWindow(csl, r.left, r.top, x * 11, y * 5, TRUE);
-
-
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
     if (console == INVALID_HANDLE_VALUE)
         throw std::runtime_error("Unable to get stdout handle.");
@@ -110,6 +110,7 @@ void SetConsoleWindowSize(SHORT x, SHORT y)
 
 }
 
+//not used
 COORD GetConsoleSize()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
@@ -120,11 +121,13 @@ COORD GetConsoleSize()
     return size;
 }
 
-void ConsoleTitle(std::string Title)
+//used once
+void ConsoleTitle()
 {
     SetConsoleTitle("Snake Game");
 }
 
+//used once
 void DisableMaximizeButton()
 {
     HWND hwnd = GetConsoleWindow();
@@ -134,6 +137,7 @@ void DisableMaximizeButton()
     SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_FRAMECHANGED);
 }
 
+//used once
 void DisableResize()
 {
     HWND hwnd = GetConsoleWindow();

@@ -37,7 +37,8 @@ bool Snake::hitBodyElement(void) {
     bool bVal = FALSE;
 
     for (size_t i = 1; i < m_object.size(); i++) {
-        if (m_object[0].getPosition() == m_object[i].getPosition()) {
+        if (m_object[0].getPosition().X == m_object[i].getPosition().X && 
+            m_object[0].getPosition().Y == m_object[i].getPosition().Y) {
             bVal = TRUE;
             break;
         }
@@ -52,7 +53,8 @@ void Snake::insertBodyElement(const Block & NewBlock) {
 
 void Snake::updatePosition(COORD HeadPosition) {
     COORD Position = HeadPosition;
-    if (Position == m_object[0].getPosition()) {
+    if (Position.X == m_object[0].getPosition().X &&
+        Position.Y == m_object[0].getPosition().Y) {
         COORD head = m_object[0].getPosition();
         COORD body1 = m_object[1].getPosition();
         if (head.Y == body1.Y) {
@@ -78,7 +80,8 @@ void Snake::updatePosition(COORD HeadPosition) {
         }
         m_object[0].setPosition(Position);
     }
-    else if (Position == m_object[1].getPosition()) {
+    else if (Position.X == m_object[1].getPosition().X &&
+             Position.Y == m_object[1].getPosition().Y) {
 
     }
     else {

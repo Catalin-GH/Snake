@@ -5,6 +5,8 @@ size_t COLOR_MAP = 8;
 size_t COLOR_FOOD = 4;
 size_t COLOR_SNAKE = 9;
 
+Printer printer;
+
 bool operator==(const COORD & left, const COORD & right)
 {
     bool bValue = FALSE;

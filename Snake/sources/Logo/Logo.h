@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "Snake.h"
 #include "Food.h"
+#include "Functions.h"
 
 #define LOGO_COLS 24
 #define LOGO_ROWS 6
@@ -14,6 +15,7 @@ extern size_t COLOR_MAP;
 extern size_t COLOR_WALL;
 extern size_t COLOR_FOOD;
 extern size_t COLOR_SNAKE;
+extern Printer printer;
 
 class AnimatedLogo
 {

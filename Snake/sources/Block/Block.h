@@ -1,12 +1,9 @@
 #pragma once
 
-#include <Windows.h>
 #include <cstdint>
-#include "Functions.h"
-#include <iostream>
-#include "Console_Functions.h"
+#include <Windows.h>
 
-extern HANDLE console;
+class Printer;
 
 class Block
 {
@@ -43,15 +40,6 @@ public:
     inline COORD getLeft() const { return m_left; }
     inline COORD getRight() const { return m_right; }
     inline COORD getPosition() const { return m_position; }
-
-    void ShowFormat(std::ostream&);
-    void ShowValue(std::ostream&);
-    void ShowColor(std::ostream&);
-    void ShowLeft(std::ostream&);
-    void ShowRight(std::ostream&);
-    void ShowPosition(std::ostream&);
-
-    void printBlock();
 
     inline COORD operator=(COORD);
     inline bool operator==(const Block &);

@@ -14,6 +14,5 @@ protected:
 
 public:
     Object() {}
-    void SeeInfos(uint8_t);
     virtual ~Object() {}
 };

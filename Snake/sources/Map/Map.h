@@ -5,7 +5,6 @@
 #include <time.h>
 
 #include "Block.h"
-#include "Console_Functions.h"
 #include "Functions.h"
 #include "Snake.h"
 
@@ -13,6 +12,8 @@ extern size_t COLOR_MAP;
 extern size_t COLOR_SNAKE;
 extern size_t COLOR_WALL;
 extern size_t COLOR_FOOD;
+
+extern Printer printer;
 
 class Map {
 private:
@@ -31,8 +32,6 @@ public:
     void deleteGraphicObject(const std::vector<Block> &);
     void printGraphic(void);
     COORD randomPosition(void);
-
-    void seeInfos(void);
 
     inline COORD operator=(COORD NewPosition) {
         COORD Position;

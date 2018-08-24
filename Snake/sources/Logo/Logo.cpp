@@ -77,7 +77,7 @@ void AnimatedLogo::printLogo(void) {
     for (size_t i = 0; i < LOGO_ROWS; i++) {
         for (size_t j = 0; j < LOGO_COLS; j++) {
             if (m_logo[i][j].getValue())
-                m_logo[i][j].printBlock();
+                printer.printBlock(m_logo[i][j]);
         }
     }
 }
@@ -101,7 +101,7 @@ void AnimatedLogo::Animation(void) {
                     size_t y = m_path[i - j].second;
                     m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
                     m_logo_part[j].setPosition(m_logo[x][y].getPosition());
-                    m_logo_part[j].printBlock();
+                    printer.printBlock(m_logo_part[j]);
                 }
 
                 /*print last LOGOPART_LENGHT blocks*/
@@ -113,11 +113,11 @@ void AnimatedLogo::Animation(void) {
                         m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
                         m_logo_part[j].setPosition(m_logo[x][y].getPosition());
                         m_logo_part[j].setColor((j == 1 || j == 2) ? (WORD)m_logo[x][y].getColor() : (WORD)m_logo_part[j].getColor());
-                        m_logo_part[j].printBlock();
+                        printer.printBlock(m_logo_part[j]);
                     }
                     size_t x = m_path[52 + i - LOGOPART_LENGHT].first;
                     size_t y = m_path[52 + i - LOGOPART_LENGHT].second;
-                    m_logo[x][y].printBlock();
+                    printer.printBlock(m_logo[x][y]);
                 }
             }
             else /*print the left blocks*/ {
@@ -129,11 +129,11 @@ void AnimatedLogo::Animation(void) {
                     m_logo_part[j].setCoord(m_logo[x][y].getLeft(), m_logo[x][y].getRight());
                     m_logo_part[j].setPosition(m_logo[x][y].getPosition());
                     m_logo_part[j].setColor((j == 1 || j == 2) ? (WORD)m_logo[x][y].getColor() : (WORD)m_logo_part[j].getColor());
-                    m_logo_part[j].printBlock();
+                    printer.printBlock(m_logo_part[j]);
                 }
                 size_t x = m_path[i - j].first;
                 size_t y = m_path[i - j].second;
-                m_logo[x][y].printBlock();
+                printer.printBlock(m_logo[x][y]);
             }
             Sleep(150);
         }

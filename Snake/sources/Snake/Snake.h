@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Functions.h"
 
 extern size_t COLOR_SNAKE;
 

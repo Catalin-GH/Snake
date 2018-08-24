@@ -9,9 +9,10 @@ include_directories(
 	Block
 	Object
 	Logo
+	Printer
 	)
 
-set(ConsoleFunc
+set (ConsoleFunc
 	Console_Functions/Console_Functions.h
 	Console_Functions/Console_Functions.cpp
 	)
@@ -60,6 +61,11 @@ set(Logo
 	Logo/Logo.cpp
 	Logo/Logo.h
 	)
+
+set (Printer
+	Printer/Printer.cpp
+	Printer/Printer.h
+	)
 	
 set(Include_Dir
 	${ConsoleFunc}
@@ -72,6 +78,7 @@ set(Include_Dir
 	${Block}
 	${Object}
 	${Logo}
+	${Printer}
 	)	
 	
 set(Main
@@ -90,6 +97,7 @@ source_group ("Food" FILES ${Food})
 source_group ("Functions" FILES ${Functions})
 source_group ("Object" FILES ${Object})
 source_group ("Logo" FILES ${Logo})
+source_group ("Printer" FILES ${Printer})
 
 add_executable (Snake_Game ${Main})
 

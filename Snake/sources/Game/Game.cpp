@@ -42,9 +42,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select < 2)
             {
-                m_gameInfo.MainElement(Position, COLOR_MAIN, previousSelected);
+                m_gameInfo.mainElement(Position, COLOR_MAIN, previousSelected);
                 ++select;
-                m_gameInfo.MainElement(Position, COLOR_MAIN_SELECT, select);
+                m_gameInfo.mainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -53,9 +53,9 @@ void Game::Main(COORD Position)
             previousSelected = select;
             if (select > 0)
             {
-                m_gameInfo.MainElement(Position, COLOR_MAIN, previousSelected);
+                m_gameInfo.mainElement(Position, COLOR_MAIN, previousSelected);
                 --select;
-                m_gameInfo.MainElement(Position, COLOR_MAIN_SELECT, select);
+                m_gameInfo.mainElement(Position, COLOR_MAIN_SELECT, select);
             }
             Sleep(100);
         }
@@ -124,10 +124,10 @@ void Game::MainOptions(void)
         if (GetAsyncKeyState(VK_DOWN)) {
             previousSelected = select;
             if (select < 4) {
-                m_gameInfo.OptionElement(Position, COLOR_MAIN, previousSelected);
+                m_gameInfo.optionElement(Position, COLOR_MAIN, previousSelected);
                 Sleep(50);
                 ++select;
-                m_gameInfo.OptionElement(Position, COLOR_MAIN_SELECT, select);
+                m_gameInfo.optionElement(Position, COLOR_MAIN_SELECT, select);
                 Sleep(50);
             }
             Sleep(200);
@@ -135,10 +135,10 @@ void Game::MainOptions(void)
         else if (GetAsyncKeyState(VK_UP)) {
             previousSelected = select;
             if (select > 0) {
-                m_gameInfo.OptionElement(Position, COLOR_MAIN, previousSelected);
+                m_gameInfo.optionElement(Position, COLOR_MAIN, previousSelected);
                 Sleep(50);
                 --select;
-                m_gameInfo.OptionElement(Position, COLOR_MAIN_SELECT, select);
+                m_gameInfo.optionElement(Position, COLOR_MAIN_SELECT, select);
                 Sleep(50);
             }
             Sleep(200);
@@ -207,7 +207,7 @@ void Game::SnakeGame(void) {
     m_map.build(OriginPosition);
     m_map.printGraphic();
     COORD Position = { 2, 3 };
-    m_gameInfo.PrintPointsInConsole(Position);
+    m_gameInfo.printPointsMessage(Position);
     COORD RandPoint = m_map.randomPosition();
     m_food.SetPosition(m_map.getBlock(RandPoint.X, RandPoint.Y).getLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).getRight(), RandPoint);
     m_snake = Snake(m_map.getCenterBlock());
@@ -224,11 +224,12 @@ void Game::SnakeGame(void) {
         if (m_map.updateObject(m_snake.getSnake()) && !m_snake.hitBodyElement())
         {
             m_map.printGraphicObject(m_snake.getSnake());
-            if (m_snake.getSnake()[0].getPosition() == m_food.GetBlock().getPosition())
+            if (m_snake.getSnake()[0].getPosition().X == m_food.GetBlock().getPosition().X && 
+                m_snake.getSnake()[0].getPosition().Y == m_food.GetBlock().getPosition().Y )
             {
                 COORD Position = { 2, 3 };
                 m_gameInfo.IncreasePoints();
-                m_gameInfo.PrintPointsInConsole(Position);
+                m_gameInfo.printPoints();
                 m_snake.insertBodyElement(m_snake.getBlockTemplate(m_map.getBlock(RandPoint.X, RandPoint.Y).getLeft(), m_map.getBlock(RandPoint.X, RandPoint.Y).getRight(), RandPoint));
                 COORD RandPoint = m_map.randomPosition();
                 m_map.deleteGraphicObject(m_food.GetFood());
@@ -257,7 +258,7 @@ void Game::ConsoleSettings()
     SetConsoleWindowSize(CONSOLE_LENGTH, CONSOLE_HEIGHT);
     DisableMaximizeButton();
     DisableResize();
-    ConsoleTitle("Snake Game");
+    ConsoleTitle();
 }
 
 void Game::MainExit()

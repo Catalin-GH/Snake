@@ -1,5 +1,7 @@
 #include <Windows.h>
 
+#include "Printer.h"
+
 #define COLOR_MAIN 14
 #define COLOR_MAIN_SELECT 12
 #define COLOR_INFO_POINT 5
