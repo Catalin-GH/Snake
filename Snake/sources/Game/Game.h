@@ -31,17 +31,16 @@ private:
     Snake m_snake;
     Food m_food;
     Info m_gameInfo;
-    AnimatedLogo m_logo;
+    Animation m_animation;
     std::thread m_thread[NTHREAD];
 
 public:
-    Game(void);
-    ~Game(void);
-    void MainStart(void);
+    Game();
+    void MainStart();
     void Main(COORD);
     void MainOptions();
-    void SnakeGame(void);
-    void MainExit(void);
+    void SnakeGame();
+    void MainExit();
     void ConsoleSettings();
 
     COORD operator=(COORD);

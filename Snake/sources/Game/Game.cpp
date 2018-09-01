@@ -1,23 +1,15 @@
 #include "Game.h"
 
-Game::Game(void)
-{
+Game::Game(){
     ConsoleSettings();
-    m_logo.InitialSetup();
 }
 
-Game::~Game(void)
-{
-}
-
-void Game::MainStart(void)
+void Game::MainStart()
 {
     COORD position = { 5, 15 };
 
     Sleep(50);
-    m_logo.InitLogo(position);
-    m_logo.printLogo();
-    m_thread[0] = std::thread(&AnimatedLogo::Animation, m_logo);
+    m_thread[0] = std::thread(&Animation::startAnimation, &m_animation, std::ref(position));
     Sleep(50);
 
     /*place options in the center of the console*/
@@ -65,20 +57,17 @@ void Game::Main(COORD Position)
             {
             case START_GAME:
             {
-                m_logo.SetStopAnimation(TRUE);
-                while (m_logo.VerifyAnimation()) {}
-                m_thread[0].detach();
-                Sleep(50);
+                m_animation.stopAnimation();
+                if (m_thread[0].joinable()) {
+                    m_thread[0].join();
+                }
                 cls();
 
                 SnakeGame();
                 cls();
-                m_logo.SetStopAnimation(FALSE);
 
-                COORD PositionLogo = { 5, 15 };
-                m_logo.InitLogo(PositionLogo);
-                m_logo.printLogo();
-                m_thread[0] = std::thread(&AnimatedLogo::Animation, m_logo);
+                COORD position = { 5, 15 };
+                m_thread[0] = std::thread(&Animation::startAnimation, &m_animation, std::ref(position));
                 Sleep(50);
 
                 select = 0;
@@ -88,16 +77,16 @@ void Game::Main(COORD Position)
             {
                 MainOptions();
                 cls();
-                m_logo.printLogo();
+                m_animation.printBackground();
                 select = 0;
                 m_gameInfo.MainBlockInit(Position);
             }break;
             case EXIT:
             {
-                cls();
                 MainExit();
                 select = 0;
                 bVal = TRUE;
+                cls();
             }break;
             }
         }
@@ -105,7 +94,7 @@ void Game::Main(COORD Position)
     }
 }
 
-void Game::MainOptions(void)
+void Game::MainOptions()
 {
     /*place options in the center of the console*/
     COORD Position = { CONSOLE_LENGTH / 2 - (SHORT)m_gameInfo.GetOptions(0).size() / 2, CONSOLE_HEIGHT / 2 - 5 };
@@ -145,52 +134,52 @@ void Game::MainOptions(void)
         }
         else if (GetAsyncKeyState(VK_LEFT)) {
             if (colors[select] > 0) {
-                size_t Color = colors[select];
+                size_t color = colors[select];
                 do {
-                    --Color;
+                    --color;
                     bool colorNotFound = FALSE;
-                    for (size_t i = 0; i < 4; i++) {    //verifica existenta culorii
-                        if (Color == colors[i]) {
+                    for (size_t i = 0; i < 4; i++) {
+                        if (color == colors[i]) {
                             colorNotFound = TRUE;
                         }
                     }
                     if (!colorNotFound) {
-                        colors[select] = Color;
+                        colors[select] = color;
                         break;
                     }
-                } while (Color > 0);
+                } while (color > 0);
                 switch (select) {
-                case 0: COLOR_MAP = colors[0]; m_logo.setMapColor(COLOR_MAP);  m_logo.printLogo(); Sleep(100); break;
-                case 1: COLOR_WALL =  colors[1]; m_logo.setWallColor(COLOR_WALL); m_logo.printLogo(); Sleep(100);  break;
-                case 2: COLOR_FOOD = colors[2]; m_logo.setFoodColor(COLOR_FOOD);  break;
-                case 3: COLOR_SNAKE = colors[3]; m_logo.setSnakeColor(COLOR_SNAKE);  break;
+                case 0: COLOR_MAP = colors[0]; m_animation.setAnimationMapColor(COLOR_MAP);  m_animation.printBackground(); Sleep(100); break;
+                case 1: COLOR_WALL =  colors[1]; m_animation.setAnimationWallColor(COLOR_WALL); m_animation.printBackground(); Sleep(100);  break;
+                case 2: COLOR_FOOD = colors[2]; m_animation.setAnimationFoodColor(COLOR_FOOD);  break;
+                case 3: COLOR_SNAKE = colors[3]; m_animation.setAnimationSnakeColor(COLOR_SNAKE);  break;
                 }
             }
             Sleep(50);
         }
         else if (GetAsyncKeyState(VK_RIGHT)) {
             if (colors[select] < 15) {
-                size_t Color = colors[select];
+                size_t color = colors[select];
 
                 do {
-                    ++Color;
+                    ++color;
                     bool colorNotFound = FALSE;
                     for (size_t i = 0; i < 4; i++) {
-                        if (Color == colors[i]) {
+                        if (color == colors[i]) {
                             colorNotFound = TRUE;
                         }
                     }
                     if (!colorNotFound) {
-                        colors[select] = Color;
+                        colors[select] = color;
                         break;
                     }
-                } while (Color < 15);
+                } while (color < 15);
 
                 switch (select) {
-                case 0: COLOR_MAP   = colors[0]; m_logo.setMapColor(COLOR_MAP);     m_logo.printLogo(); Sleep(100); break;
-                case 1: COLOR_WALL  = colors[1]; m_logo.setWallColor(COLOR_WALL);   m_logo.printLogo(); Sleep(100); break;
-                case 2: COLOR_FOOD  = colors[2]; m_logo.setFoodColor(COLOR_FOOD);   break;
-                case 3: COLOR_SNAKE = colors[3]; m_logo.setSnakeColor(COLOR_SNAKE); break;
+                case 0: COLOR_MAP   = colors[0]; m_animation.setAnimationMapColor(COLOR_MAP);     m_animation.printBackground(); Sleep(100); break;
+                case 1: COLOR_WALL  = colors[1]; m_animation.setAnimationWallColor(COLOR_WALL);   m_animation.printBackground(); Sleep(100); break;
+                case 2: COLOR_FOOD  = colors[2]; m_animation.setAnimationFoodColor(COLOR_FOOD);   break;
+                case 3: COLOR_SNAKE = colors[3]; m_animation.setAnimationSnakeColor(COLOR_SNAKE); break;
                 }
             }
             Sleep(50);
@@ -202,7 +191,7 @@ void Game::MainOptions(void)
     }
 }
 
-void Game::SnakeGame(void) {
+void Game::SnakeGame() {
     COORD OriginPosition = { (SHORT)(CONSOLE_HEIGHT - MAP_LENGTH) / 2 , (SHORT)(CONSOLE_LENGTH - MAP_LENGTH * 2) / 2 };
     m_map.build(OriginPosition);
     m_map.printGraphic();
@@ -263,15 +252,16 @@ void Game::ConsoleSettings()
 
 void Game::MainExit()
 {
-    m_logo.SetStopAnimation(TRUE);
-    while (m_logo.VerifyAnimation()) {}
-    m_thread[0].detach();
+    m_animation.stopAnimation();
+    if (m_thread[0].joinable()) {
+        m_thread[0].join();
+    }
 }
 
-COORD Game::operator=(COORD NewPosition)
+COORD Game::operator=(COORD coord)
 {
-    COORD Position;
-    Position.X = NewPosition.X;
-    Position.Y = NewPosition.Y;
-    return Position;
+    COORD position;
+    position.X = coord.X;
+    position.Y = coord.Y;
+    return position;
 }

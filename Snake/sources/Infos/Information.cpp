@@ -13,7 +13,7 @@ Info::Info() :
 void Info::printPointsMessage(COORD position) {
     uint8_t offset = 1;
     m_points_coord = position;
-    m_points_coord.X += m_points_message.length() + offset;
+    m_points_coord.X += static_cast<uint8_t>(m_points_message.length()) + offset;
     printer.printC(position, COLOR_INFO, m_points_message.c_str());
     printPoints();
 }

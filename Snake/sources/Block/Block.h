@@ -10,7 +10,7 @@ class Block
 private:
     size_t m_format;    //ascii value
     size_t m_value;     //clasification
-    size_t m_color;
+    WORD m_color;
     COORD m_left;
     COORD m_right;
     COORD m_position;
@@ -20,7 +20,7 @@ public:
 
     inline void setFormat(size_t f) { m_format = f; }
     inline void setValue(size_t v) { m_value = v; }
-    inline void setColor(size_t c) { m_color = c; }
+    inline void setColor(WORD c) { m_color = c; }
     inline void setLeft(COORD l) { m_left = l; }
     inline void setRight(COORD r) { m_right = r; }
     inline void setCoord(COORD l, COORD r) { m_left = l, m_right = r; }
@@ -36,7 +36,7 @@ public:
 
     inline size_t getFormat() const { return m_format; }
     inline size_t getValue() const { return m_value; }
-    inline size_t getColor() const { return m_color; }
+    inline WORD getColor() const { return m_color; }
     inline COORD getLeft() const { return m_left; }
     inline COORD getRight() const { return m_right; }
     inline COORD getPosition() const { return m_position; }
