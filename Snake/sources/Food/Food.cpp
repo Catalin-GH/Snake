@@ -1,16 +1,10 @@
 #include "Food.h"
 
-Food::Food()
+Food::Food(const Coordonates2D & position, const uint8_t color)
+    : mFood(position, Category::FOOD, color)
 {
-    Block block;
-    block.setColor(COLOR_FOOD);
-    block.setFormat(FORMAT);
-    block.setValue(IS_FOOD);
-    m_object.push_back(block);
 }
 
-void Food::SetPosition(COORD left, COORD right, COORD Position)
+Food::~Food()
 {
-    m_object[0].setCoord(left, right);
-    m_object[0].setPosition(Position);
 }

@@ -9,9 +9,6 @@
 //    std::array<std::string, 3> m_main;
 //    std::array<std::string, 5> m_options;
 //    std::string m_points_message;
-//    std::string m_game_over_message;
-//    uint8_t m_points;
-//    COORD m_points_coord;
 //
 //public:
 //    Info();
@@ -59,3 +56,24 @@
 //{ 
 //    ++m_points; 
 //};
+
+#ifndef __MENU_ITEM_HPP__
+#define __MENU_ITEM_HPP__
+
+#include <array>
+#include "Types.h"
+
+static const uint8_t LABELS = 3;
+
+class Menu
+{
+private:
+    const Coordonates2D mPosition;
+    const std::array<std::string, LABELS> mItems;
+
+public:
+    Menu(const Coordonates2D & position);
+    ~Menu();
+};
+
+#endif // __MENU_ITEM_HPP__

@@ -1,15 +1,16 @@
-#pragma once
+#ifndef __FOOD_H__
+#define __FOOD_H__
 
-#include "Object.h"
-#include "Functions.h"
+#include "SquareBlock.h"
+#include "Types.h"
 
-extern size_t COLOR_FOOD;
-
-class Food : public Object
+class Food
 {
+    const SquareBlock mFood;
+
 public:
-    Food();
-    void SetPosition(COORD, COORD, COORD);
-    Block GetBlock() const { return m_object[0]; }
-    std::vector<Block> GetFood() const { return m_object; }
+    Food(const Coordonates2D & position, const uint8_t color);
+    ~Food();
 };
+
+#endif //__FOOD_H__

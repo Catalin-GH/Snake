@@ -7,11 +7,16 @@ include_directories(
 	Functions
 	Food
 	Block
-	Object
-	Logo
+	Animation
 	Printer
+	Types
 	)
 
+set (Types
+	Types/Types.h
+	Types/Types.cpp
+	)
+	
 set (ConsoleFunc
 	Console_Functions/Console_Functions.h
 	Console_Functions/Console_Functions.cpp
@@ -30,11 +35,19 @@ set (Snake
 set (Infos
 	Infos/Information.h
 	Infos/Information.cpp
+	Infos/Highscore.hpp
+	Infos/Highscore.cpp
+	Infos/MenuItem.hpp
+	Infos/MenuItem.cpp
 	)
 	
 set (Map
 	Map/Map.h
 	Map/Map.cpp
+	Map/Playground.hpp
+	Map/Playground.cpp
+	Map/Wall.hpp
+	Map/Wall.cpp
 	)
 	
 set (Food
@@ -49,17 +62,14 @@ set(Functions
 	
 set(Block
 	Block/Block.cpp
-	Block/Block.h
-	)
-	
-set(Object
-	Object/Object.cpp
-	Object/Object.h
+	Block/Block.hpp
+	Block/SquareBlock.h
+	Block/SquareBlock.cpp
 	)
 
-set(Logo
-	Logo/Logo.cpp
-	Logo/Logo.h
+set(Animation
+	Animation/Animation.cpp
+	Animation/Animation.h
 	)
 
 set (Printer
@@ -77,8 +87,9 @@ set(Include_Dir
 	${Functions}
 	${Block}
 	${Object}
-	${Logo}
+	${Animation}
 	${Printer}
+	${Types}
 	)	
 	
 set(Main
@@ -95,9 +106,9 @@ source_group ("Infos" FILES ${Infos})
 source_group ("Map" FILES ${Map})
 source_group ("Food" FILES ${Food})
 source_group ("Functions" FILES ${Functions})
-source_group ("Object" FILES ${Object})
-source_group ("Logo" FILES ${Logo})
+source_group ("Animation" FILES ${Animation})
 source_group ("Printer" FILES ${Printer})
+source_group ("Types" FILES ${Types})
 
 add_executable (Snake_Game ${Main})
 

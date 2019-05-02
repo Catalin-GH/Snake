@@ -2,9 +2,9 @@
 
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void gotoxy(size_t x, size_t y)
+void gotoxy(uint8_t x, uint8_t y)
 {
-    COORD pos = { (SHORT)x, (SHORT)y };
+    COORD pos = { static_cast<SHORT>(x), static_cast<SHORT>(y) };
     SetConsoleCursorPosition(console, pos);
 }
 

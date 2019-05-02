@@ -48,3 +48,17 @@
 //    optionElement(position, Color::main, 3);
 //    optionElement(position, Color::main, 4);
 //}
+
+#include "MenuItem.hpp"
+
+static const uint8_t COLOR_ITEM_NOT_SELECTED = 14;
+static const uint8_t COLOR_ITEM_SELECTED = 12;
+
+Menu::Menu(const Coordonates2D & position)
+    : mPosition(position)
+{
+}
+
+Menu::~Menu()
+{
+}

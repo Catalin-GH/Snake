@@ -1,44 +1,61 @@
-#pragma once
+//#pragma once
+//
+//#include <cstdlib>
+//#include <fstream>
+//#include <time.h>
+//#include <vector>
+//
+//#include "SquareBlock.h"
+//#include "Printer.h"
+//#include "Snake.h"
+//#include "Types.h"
+//
+//extern ColorGame colorGame;
+//
+//class Map
+//{
+//private:
+//    SquareBlock m_block[Length::map][Length::map];
+//    COORD m_originPosition;
+//public:
+//    Map() {}
+//    ~Map() {}
+//
+//    SquareBlock getBlock(size_t, size_t) const;
+//    SquareBlock getCenterOfMap() const;
+//
+//    void build(COORD);
+//    bool updateObject(const std::vector<SquareBlock> &);
+//    void printGraphicObject(const std::vector<SquareBlock> &);
+//    void deleteGraphicObject(const std::vector<SquareBlock> &);
+//    void printGraphic();
+//    COORD randomPosition();
+//
+//    friend bool operator==(const COORD &, const COORD &);
+//};
+//
+//inline
+//SquareBlock Map::getBlock(size_t i, size_t j) const {
+//    return m_block[i][j];
+//}
 
-#include <cstdlib>
-#include <fstream>
-#include <time.h>
+#ifndef __MAP_H__
+#define __MAP_H__
 
-#include "Block.h"
-#include "Functions.h"
-#include "Snake.h"
+#include "Playground.hpp"
+#include "Types.h"
+#include "Wall.hpp"
 
-extern size_t COLOR_MAP;
-extern size_t COLOR_SNAKE;
-extern size_t COLOR_WALL;
-extern size_t COLOR_FOOD;
-
-extern Printer printer;
-
-class Map {
+class Map
+{
 private:
-    Block m_block[MAP_LENGTH][MAP_LENGTH];
-    COORD m_originPosition;
+    const Coordonates2D mPosition;
+    const Wall mWall;
+    Playground mPlayground;
+
 public:
-    Map() {}
-    ~Map() {}
-
-    Block getBlock(size_t, size_t) const;
-    Block getCenterBlock() const;
-
-    void build(COORD);
-    bool updateObject(const std::vector<Block> &);
-    void printGraphicObject(const std::vector<Block> &);
-    void deleteGraphicObject(const std::vector<Block> &);
-    void printGraphic(void);
-    COORD randomPosition(void);
-
-    inline COORD operator=(COORD NewPosition) {
-        COORD Position;
-        Position.X = NewPosition.X;
-        Position.Y = NewPosition.Y;
-        return Position;
-    }
-
-    friend bool operator==(const COORD &, const COORD &);
+    Map(const Coordonates2D & position);
+    ~Map();
 };
+
+#endif //__MAP_H__ 

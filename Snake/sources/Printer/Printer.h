@@ -1,21 +1,26 @@
-#pragma once
+#ifndef __PRINTER_H__
+#define __PRINTER_H__
 
-#include <iostream>
 #include <mutex>
 
-#include "Console_Functions.h"
-#include "Block.h"
+class SquareBlock;
 
-extern HANDLE console;
-
-class Printer {
+class Printer
+{
 private:
-    std::mutex m_mutex_cout;
+    static std::mutex mCout;
 
 public:
-    void printC(COORD, size_t, const char *);
-    void printF(size_t);
-    void printI(COORD, size_t, size_t);
-    void endLine();
-    void printBlock(Block);
+    Printer() = delete;
+    Printer(const Printer &) = delete;
+    Printer(Printer &&) = delete;
+    Printer& operator=(const Printer &) = delete;
+
+    static void printString(Coordonates2D, uint8_t, const std::string&);
+    static void printFormat();
+    static void printI(Coordonates2D, uint8_t, size_t);
+    static void endLine();
+    static void printBlock(const SquareBlock &);
 };
+
+#endif // !__PRINTER_H__
