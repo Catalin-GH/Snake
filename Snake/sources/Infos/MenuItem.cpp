@@ -51,14 +51,32 @@
 
 #include "MenuItem.hpp"
 
+#include <utility>
+
 static const uint8_t COLOR_ITEM_NOT_SELECTED = 14;
 static const uint8_t COLOR_ITEM_SELECTED = 12;
 
+static const std::string ITEM_START = "START";
+static const std::string ITEM_OPTION = "OPTIONS";
+static const std::string ITEM_EXIT = "EXIT";
+
 Menu::Menu(const Coordonates2D & position)
-    : mPosition(position)
 {
+    insertItems(position);
 }
 
 Menu::~Menu()
 {
+}
+
+void Menu::insertItems(const Coordonates2D & position)
+{
+    const uint8_t offset = 2;
+    mItems.insert(std::make_pair<Coordonates2D, std::string>(position, ITEM_START));
+
+    //Coordonates2D pos(position.x, position.y + offset);
+    //mItems.insert({ pos, ITEM_OPTION });
+
+    //pos = Coordonates2D(pos.x, pos.y + offset);
+    //mItems.insert({ pos, ITEM_EXIT });
 }

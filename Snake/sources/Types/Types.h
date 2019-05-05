@@ -31,6 +31,11 @@ struct Coordonates2D
     {
         return (this->x != position.x && this->y != position.y);
     }
+
+    const bool operator==(const Coordonates2D & position) const
+    {
+        return (this->x == position.x && this->y == position.y);
+    }
 };
 
 enum class Category : uint8_t

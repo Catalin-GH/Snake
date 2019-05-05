@@ -37,7 +37,7 @@ void Highscore::printPlayer() const
     Printer::printString(mPlayerPosition, COLOR_PLAYER, mPlayerName);
 }
 
-/*Use it only for increasing values*/
+/*Only for increasing values*/
 void Highscore::setPoints(const uint16_t points)
 {
     mScore = points;

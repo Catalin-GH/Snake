@@ -6,6 +6,7 @@
 
 class Food
 {
+private:
     const SquareBlock mFood;
 
 public:

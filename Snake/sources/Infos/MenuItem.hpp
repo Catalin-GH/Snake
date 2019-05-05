@@ -60,16 +60,16 @@
 #ifndef __MENU_ITEM_HPP__
 #define __MENU_ITEM_HPP__
 
-#include <array>
 #include "Types.h"
 
-static const uint8_t LABELS = 3;
+#include <unordered_map>
 
 class Menu
 {
 private:
-    const Coordonates2D mPosition;
-    const std::array<std::string, LABELS> mItems;
+    std::unordered_map<Coordonates2D, std::string> mItems;
+
+    void insertItems(const Coordonates2D & position);
 
 public:
     Menu(const Coordonates2D & position);
