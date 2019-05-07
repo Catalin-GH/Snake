@@ -37,9 +37,11 @@ void Animation::wipe()
     }
 }
 
-void Animation::initAnimation() {
+void Animation::initAnimation() 
+{
     //template logo
-    std::vector<uint8_t> logoMatrix {
+    std::vector<uint8_t> logoMatrix 
+    {
         1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1,
         1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
         1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1,
@@ -54,8 +56,8 @@ void Animation::initAnimation() {
 
 const uint8_t Animation::countOnes(const std::vector<uint8_t> & matrix) const
 {
-    const uint8_t value = 1;
-    return static_cast<uint8_t>(std::count(matrix.begin(), matrix.end(), value));
+    const uint8_t search = 1;
+    return static_cast<uint8_t>(std::count(matrix.begin(), matrix.end(), search));
 }
 
 void Animation::computeBlocks(const std::vector<uint8_t> & matrix)
@@ -92,4 +94,18 @@ const uint8_t Animation::randomColor() const
     srand(clock());
 
     return rand() % maxColor + 1;
+}
+
+bool isOccupied(const uint8_t value)
+{
+    return value != 0;
+}
+
+const std::vector<Coordonates2D> Animation::isNeighbour(const Coordonates2D & neighbour) const
+{
+    std::vector<Coordonates2D> neighbours;
+
+
+
+    return neighbours;
 }
