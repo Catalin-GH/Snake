@@ -71,8 +71,8 @@ Menu::~Menu()
 
 void Menu::insertItems(const Coordonates2D & position)
 {
-    const uint8_t offset = 2;
-    mItems.insert(std::make_pair<Coordonates2D, std::string>(position, ITEM_START));
+    //const uint8_t offset = 2;
+    //mItems.insert(std::make_pair<Coordonates2D, std::string>(position, ITEM_START));
 
     //Coordonates2D pos(position.x, position.y + offset);
     //mItems.insert({ pos, ITEM_OPTION });

@@ -10,8 +10,15 @@ include_directories(
 	Animation
 	Printer
 	Types
+	Log
+	Utilities
 	)
 
+set(Utilities
+	Utilities/Utilities.hpp
+	Utilities/Utilities.cpp
+	)
+	
 set (Types
 	Types/Types.h
 	Types/Types.cpp
@@ -77,6 +84,11 @@ set (Printer
 	Printer/Printer.h
 	)
 	
+set (Log
+	Log/Log.cpp
+	Log/Log.hpp
+	)
+	
 set(Include_Dir
 	${ConsoleFunc}
 	${Game}
@@ -90,6 +102,8 @@ set(Include_Dir
 	${Animation}
 	${Printer}
 	${Types}
+	${Log}
+	${Utilities}
 	)	
 	
 set(Main
@@ -109,6 +123,8 @@ source_group ("Functions" FILES ${Functions})
 source_group ("Animation" FILES ${Animation})
 source_group ("Printer" FILES ${Printer})
 source_group ("Types" FILES ${Types})
+source_group ("Log" FILES ${Log})
+source_group ("Utilities" FILES ${Utilities})
 
 add_executable (Snake_Game ${Main})
 

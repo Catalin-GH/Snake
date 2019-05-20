@@ -1,55 +1,50 @@
 #ifndef __ANIMATION_H__
 #define __ANIMATION_H__
 
-#include "SquareBlock.h"
 #include "Types.h"
 
-//to be deleted
+#include <atomic>
+#include <array>
+#include <map>
 #include <vector>
 
-#include <unordered_map>
+static const uint8_t MAXIMUM_NEIGHBOURS = 8;
 
 class SquareBlock;
 
-struct KeyHasher
-{
-    std::size_t operator()(const SquareBlock & block) const
-    {
-        using std::hash;
-        uint16_t hashResult = 0;
-        const uint8_t bitsShift = 8;
-        const Coordonates2D pos = block.getPosition();
-        const uint8_t color = block.getColor();
-
-        hashResult = hash<uint8_t>()(pos.x) & hash<uint8_t>()(pos.y) << bitsShift;
-        hashResult = hashResult & color;
-
-        return hashResult;
-    }
-};
-
 class Animation
 {
-private:
-    const Coordonates2D mPosition;
-    std::vector<SquareBlock> mAnimation;
-    std::unordered_map<SquareBlock, std::vector<SquareBlock>, KeyHasher> mNeighbours;
-
-    const std::vector<Coordonates2D> isNeighbour(const Coordonates2D & neighbour) const;
-    void initAnimation();
-    const uint8_t countOnes(const std::vector<uint8_t> & matrix) const;
-    void computeBlocks(const std::vector<uint8_t> & matrix);
-    const uint8_t randomColor() const;
-    void addElement(const Coordonates2D & position);
-
-    void draw() const;
-    void wipe();
-
 public:
     explicit Animation(const Coordonates2D & position);
     ~Animation();
+
+    void play();
+    static void stop();
+
+private:
+    void create();
+
+    /* Calculate the parameters to initialize the SquareBlocks */
+    void createLogoBlocks(const std::vector<uint8_t> & matrix);
+
+    /* Add new element (SquareBlock) to logo */
+    void addElement(const uint8_t key, const Coordonates2D & position);
+
+    /* Get a list of colors of the neighbours.s */
+    const std::array<uint8_t, MAXIMUM_NEIGHBOURS> getNeighbourColors(const uint8_t centerElement) const;
+
+    /* Retrive the color of the neighbour */
+    const uint8_t getColorOf(const uint8_t neighbour) const;
+    const uint8_t randKey() const;
+    void draw() const;
+    void wipe();
+
+private:
+    static std::atomic_bool mStop;
+    const Coordonates2D mPosition;
+    std::map<uint8_t, SquareBlock> mElements;
 };
 
-bool isOccupied(const uint8_t);
+const uint8_t uniqueColor(std::array<uint8_t, MAXIMUM_NEIGHBOURS> colorList);
 
 #endif // !__ANIMATION_H__

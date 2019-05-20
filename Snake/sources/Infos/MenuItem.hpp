@@ -67,7 +67,7 @@
 class Menu
 {
 private:
-    std::unordered_map<Coordonates2D, std::string> mItems;
+    //std::unordered_map<Coordonates2D, std::string> mItems;
 
     void insertItems(const Coordonates2D & position);
 

@@ -1,21 +1,12 @@
 #ifndef __SQUARE_BLOCK_HPP__
 #define __SQUARE_BLOCK_HPP__
 
-#include <cstdint>
 #include "Block.hpp"
-#include "Types.h"
+
+#include <cstdint>
 
 class SquareBlock
 {
-private:
-    Coordonates2D mPosition;
-    uint8_t mColor;
-    Block mLeft;
-    Block mRight;
-
-    const Category mCategory;
-
-    void setBlocksPosition();
 public:
     SquareBlock(const Coordonates2D & position, const Category category,
         const uint8_t color);
@@ -31,6 +22,15 @@ public:
     const Coordonates2D getPosition() const;
 
     const bool operator==(const SquareBlock & squareBlock) const;
+
+private:
+    Coordonates2D mPosition;
+    uint8_t mColor;
+    Block mLeft;
+    Block mRight;
+    const Category mCategory;
+
+    void setBlocksPosition();
 };
 
 #endif //__SQUARE_BLOCK_HPP__

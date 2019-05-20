@@ -1,17 +1,19 @@
 #include "Animation.h"
 #include "Printer.h"
+#include "SquareBlock.h"
+#include "Utilities.hpp"
 
 #include <algorithm>
 
-static const uint8_t LOGO_COLS = 23;
+static const uint8_t TEMPLATE_COLS = 23;
+static const uint8_t TEMPLATE_ROWS = 6;
 
-//not used yet
-static const uint8_t LOGO_ROWS = 6;
+std::atomic_bool Animation::mStop(false);
 
 Animation::Animation(const Coordonates2D & position)
     : mPosition(position)
 {
-    initAnimation();
+    create();
     draw();
 }
 
@@ -22,25 +24,24 @@ Animation::~Animation()
 
 void Animation::draw() const
 {
-    for (auto const & sqBlock : mAnimation)
+    for (auto const & sqBlock : mElements)
     {
-        Printer::printBlock(sqBlock);
+        Printer::printBlock(sqBlock.second);
     }
 }
 
 void Animation::wipe()
 {
-    for (auto & sqBlock : mAnimation)
+    for (auto & sqBlock : mElements)
     {
-        sqBlock.setColor(BLACK_COLOR);
-        //Printer::printBlock(sqBlock);
+        sqBlock.second.setColor(BLACK_COLOR);
+        Printer::printBlock(sqBlock.second);
     }
 }
 
-void Animation::initAnimation() 
+void Animation::create() 
 {
-    //template logo
-    std::vector<uint8_t> logoMatrix 
+    const std::vector<uint8_t> logoTemplate 
     {
         1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1,
         1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
@@ -50,24 +51,19 @@ void Animation::initAnimation()
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     };
 
-    mAnimation.reserve(sizeof(SquareBlock) * countOnes(logoMatrix));
-    computeBlocks(logoMatrix);
+    createLogoBlocks(logoTemplate);
 }
 
-const uint8_t Animation::countOnes(const std::vector<uint8_t> & matrix) const
-{
-    const uint8_t search = 1;
-    return static_cast<uint8_t>(std::count(matrix.begin(), matrix.end(), search));
-}
-
-void Animation::computeBlocks(const std::vector<uint8_t> & matrix)
+void Animation::createLogoBlocks(const std::vector<uint8_t> & matrixTemplate)
 {
     const uint8_t search = 1;
     uint8_t offsetX = 0;
     uint8_t offsetY = 0;
-    std::for_each(matrix.cbegin(), matrix.cend(), [&](const uint8_t value)
+    uint8_t key = 1;    // key should not be 0
+
+    std::for_each(matrixTemplate.cbegin(), matrixTemplate.cend(), [&](const uint8_t value)
     {
-        if (0u == offsetX % LOGO_COLS && 0u != offsetX)
+        if (0u == offsetX % TEMPLATE_COLS && 0u != offsetX)
         {
             offsetX = 0;
             ++offsetY;
@@ -75,37 +71,119 @@ void Animation::computeBlocks(const std::vector<uint8_t> & matrix)
 
         if (value == search)
         {
-            addElement(Coordonates2D(mPosition.x + offsetX, mPosition.y + offsetY));
+            addElement(key, Coordonates2D(mPosition.x + offsetX, mPosition.y + offsetY));
         }
 
         ++offsetX;
+        ++key;
     });
 }
 
-void Animation::addElement(const Coordonates2D & position)
+void Animation::addElement(const uint8_t key, const Coordonates2D & position)
 {
-    uint8_t color = randomColor();
-    mAnimation.emplace_back(position, Category::LOGO, color);
+    auto colorList = getNeighbourColors(key);
+    const uint8_t color = uniqueColor(colorList);
+    mElements.emplace(std::make_pair(key, SquareBlock(position, Category::LOGO, color)));
 }
 
-const uint8_t Animation::randomColor() const
+const std::array<uint8_t, MAXIMUM_NEIGHBOURS> Animation::getNeighbourColors(const uint8_t centerNeighbour) const
 {
-    const uint8_t maxColor = 15;
-    srand(clock());
+    std::array<uint8_t, MAXIMUM_NEIGHBOURS> colors{ 0, 0, 0, 0, 0, 0, 0, 0 };
+    const uint8_t offset = 1;
 
-    return rand() % maxColor + 1;
+    /*
+    * Check for each neighbour according to this picture: 
+    * https://www.mathworks.com/matlabcentral/answers/uploaded_files/195423/image.png
+    */
+    colors.at(0) = getColorOf(centerNeighbour - TEMPLATE_COLS - offset);
+    colors.at(1) = getColorOf(centerNeighbour - TEMPLATE_COLS);
+    colors.at(2) = getColorOf(centerNeighbour - TEMPLATE_COLS + offset);
+
+    colors.at(3) = getColorOf(centerNeighbour - offset);
+    colors.at(4) = getColorOf(centerNeighbour + offset);
+
+    colors.at(5) = getColorOf(centerNeighbour + TEMPLATE_COLS - offset);
+    colors.at(6) = getColorOf(centerNeighbour + TEMPLATE_COLS);
+    colors.at(7) = getColorOf(centerNeighbour + TEMPLATE_COLS + offset);
+
+    return colors;
 }
 
-bool isOccupied(const uint8_t value)
+void Animation::play()
 {
-    return value != 0;
+    std::atomic_init(&mStop, false);
+
+    std::thread animationProcess([&]() 
+    {
+        while (false == mStop)
+        {
+            auto key = randKey();
+            auto colorList = getNeighbourColors(key);
+            auto color = uniqueColor(colorList);
+            auto iter = mElements.find(key);
+
+            if (iter != mElements.end())
+            {
+                iter->second.setColor(color);
+                Printer::printBlock(iter->second);
+            }
+
+            sleepThread(70);
+        }
+    });
+
+    animationProcess.detach();
 }
 
-const std::vector<Coordonates2D> Animation::isNeighbour(const Coordonates2D & neighbour) const
+void Animation::stop()
 {
-    std::vector<Coordonates2D> neighbours;
+    std::atomic_init(&mStop, true);
+}
 
+const uint8_t Animation::getColorOf(const uint8_t neighbour) const
+{
+    const uint8_t maxNumberNeighbours = TEMPLATE_COLS * TEMPLATE_ROWS;
+    uint8_t color = 0; //not found yet
 
+    if (neighbour > 0u && neighbour < maxNumberNeighbours)
+    {
+        auto search = mElements.find(neighbour);
+        if (search != mElements.end())
+        {
+            color = search->second.getColor();
+        }
+    }
 
-    return neighbours;
+    return color;
+}
+
+const uint8_t Animation::randKey() const
+{
+    auto iter = mElements.begin();
+    const uint16_t lowerBound = 0;
+    const auto upperBound = static_cast<uint16_t>(mElements.size()) - 1;
+
+    /*
+    * https://en.cppreference.com/w/cpp/iterator/advance
+    * Starting with Distance n = 0 the first iterator in the container may be found.
+    */
+    std::advance(iter, randNumber(lowerBound, upperBound));
+
+    return iter->first;
+}
+
+const uint8_t uniqueColor(std::array<uint8_t, MAXIMUM_NEIGHBOURS> colorList)
+{
+    const uint8_t lowerColor = 1;
+    const uint8_t upperColor = 15;
+    uint16_t color = 0;
+    auto iter = colorList.cbegin();
+
+    do
+    {
+        color = randNumber(lowerColor, upperColor); //get a random color within a range
+        iter = std::find(colorList.cbegin(), colorList.cend(), color);
+    } while (iter != colorList.cend());
+
+    return static_cast<uint8_t>(color);
 }

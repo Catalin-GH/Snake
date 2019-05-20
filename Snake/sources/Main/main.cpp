@@ -1,11 +1,14 @@
 #include "Map.h"
 #include "Animation.h"
 #include "Highscore.hpp"
+#include "Utilities.hpp"
 #include <chrono>
 #include <thread>
 
 int main()
 {
+    srand(time_t()); //used for randomness 
+
     //Game game;
     //game.mainStart();
 
@@ -17,7 +20,13 @@ int main()
 
     //Map wall({ 2, 3 });
 
-    //Animation animation({ 0, 0 });
+    Animation animation({ 0, 0 });
+    animation.play();
+
+    sleepThread(5000);
+    Animation::stop();
+
+    sleepThread(3000);
 
     //Highscore hightscore({ 3, 0 }, "George");
 
